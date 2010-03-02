@@ -14,8 +14,8 @@ If CouchModel is used without Rails, the ruby standard library (tested with 1.9.
 
 If the activemodel gem is installed, CouchModel automatically provides an interface to Rails 3.
 
-To run the test suite, (({rspec})) (tested with 1.2.9) is required. A CouchDB instance is just required for the
-integration tests (task (({spec:integration}))).
+To run the test suite, +rspec+ (tested with 1.2.9) is required. A CouchDB instance is just required for the integration
+tests (task +spec:integration+).
 
 == Installation
 
@@ -23,9 +23,9 @@ CouchModel is part of the gemcutter archive and can be installed with
 
   gem install couchmodel
 
-== Getting started
+== Defining a model
 
-First of all, it's necessary to create a subclass of (({CouchModel::Base}))
+To define a model, it's necessary to create a subclass of +CouchModel::Base+
 
   class User < CouchModel::Base
 
@@ -35,9 +35,50 @@ First of all, it's necessary to create a subclass of (({CouchModel::Base}))
 
   end
 
-The (({setup_database})) method defines a database for the model. The (({url})) option is required and specifies the
-url of the database in the scheme (({http://[host]:[port]/[database_name]})). If the option
-(({setup_on_initialization})) is set to true, CouchModel will try to create the database when the model is initialized.
-If the option (({delete_if_exists})) is specified, the database will be deleted and re-created. If the option
-(({setup_on_initialization})) is not specified or false, the database setup be done manually by calling
-(({CouchModel::Configuration.setup_databases})) and (({CouchModel::Configuration.setup_designs})).
+The +setup_database+ method defines a database for the model. The +url+ option is required and specifies the url of the
+database in the scheme <em>http://[host]:[port]/[database_name]</em>. If the option +setup_on_initialization+ is set to
+true, CouchModel will try to create the database when the model is initialized. If the option +delete_if_exists+ is
+specified, the database will be deleted and re-created. If the option +setup_on_initialization+ is not specified or
+false, the database setup be done manually by calling <tt>CouchModel::Configuration.setup_databases</tt> and
+<tt>CouchModel::Configuration.setup_designs</tt>.
+
+== Design documents
+
+Each defined model has a realted design document, that keeps all the views for that model. Via the command
+
+  CouchModel::Configuration.design_directory = "[directory]"
+
+a directory is specfied that keeps all the design document. CouchModel will watch out for a file with the name
+<em>[design directory]/[model_name].design</em> and will use it as the related design document. If no such file exists,
+a design document will be created (but not saved to the file). The design ducument can be asscessed via +Model.design+.
+
+A design document should look like this
+
+  :id:        "test_design"
+  :language:  "javascript"
+  :views:
+    "view_name_1":
+      :map:
+        function(document) {
+          ...
+        };
+      :reduce:
+        function(key, values, rereduce) {
+          ...
+        };
+    "view_name_2":
+      :map:
+        function(document) {
+          ...
+        };
+      :reduce:
+        function(key, values, rereduce) {
+          ...
+        };
+    ...
+
+It will create the methods +Model.view_name_1+ and +Model.view_name_2+, which returns the result of the related view.
+It's also possible to pass some extra options like +startkey+ or +key+ to these methods.
+
+CouchModel also creates by default a class view. This view simply selects all documents from the corresponding model
+and is assigned to the method +Model.all+.
