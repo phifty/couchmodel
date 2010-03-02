@@ -6,7 +6,7 @@ CouchModel::Configuration.design_directory = File.join File.dirname(__FILE__), "
 
 class CollectionTestModel < CouchModel::Base
 
-  setup_database :url => "http://localhost:5984/frontera_test"
+  setup_database :url => "http://localhost:5984/test"
 
   key_accessor :name
 
@@ -15,7 +15,7 @@ end
 describe CouchModel::Collection do
 
   before :each do
-    @database = CouchModel::Database.new :name => "frontera_test"
+    @database = CouchModel::Database.new :name => "test"
     @collection = @database.documents :limit => 1
   end
 

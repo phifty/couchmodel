@@ -4,13 +4,13 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "li
 describe CouchModel::Database do
 
   before :each do
-    @database = CouchModel::Database.new :name => "frontera_test"
+    @database = CouchModel::Database.new :name => "test"
   end
 
   describe "==" do
 
     before :each do
-      @other = CouchModel::Database.new :name => "frontera_test"
+      @other = CouchModel::Database.new :name => "test"
     end
 
     it "should be true when comparing two equal databases" do
@@ -23,7 +23,7 @@ describe CouchModel::Database do
     end
 
     it "should be false when comparing two databases with on different servers" do
-      @other = CouchModel::Database.new :name => "frontera_test", :server => CouchModel::Server.new(:host => "other")
+      @other = CouchModel::Database.new :name => "test", :server => CouchModel::Server.new(:host => "other")
       @database.should_not == @other
     end
 
@@ -32,7 +32,7 @@ describe CouchModel::Database do
   describe "===" do
 
     before :each do
-      @other = CouchModel::Database.new :name => "frontera_test"
+      @other = CouchModel::Database.new :name => "test"
     end
 
     it "should be true when comparing a database object with itself" do
@@ -53,7 +53,7 @@ describe CouchModel::Database do
     end
 
     it "should create the database" do
-      CouchModel::Transport.should_receive(:request).with(:put, /frontera_test$/, anything).and_return(@response)
+      CouchModel::Transport.should_receive(:request).with(:put, /test$/, anything).and_return(@response)
       @database.create!
     end
 
@@ -67,7 +67,7 @@ describe CouchModel::Database do
     end
 
     it "should delete the database" do
-      CouchModel::Transport.should_receive(:request).with(:delete, /frontera_test$/, anything).and_return(@response)
+      CouchModel::Transport.should_receive(:request).with(:delete, /test$/, anything).and_return(@response)
       @database.delete!
     end
 

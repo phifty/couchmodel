@@ -5,7 +5,7 @@ CouchModel::Configuration.design_directory = File.join File.dirname(__FILE__), "
 
 class BaseTestModel < CouchModel::Base
 
-  setup_database :url => "http://localhost:5984/frontera_test"
+  setup_database :url => "http://localhost:5984/test"
 
   key_accessor :name
 
@@ -25,7 +25,7 @@ describe BaseTestModel do
       CouchModel::Design.stub!(:new).and_return(@design)
       CouchModel::Design.stub!(:from_file).and_return(@design)
 
-      @options = { :url => "http://localhost:5984/frontera_test" }
+      @options = { :url => "http://localhost:5984/test" }
     end
 
     def do_setup

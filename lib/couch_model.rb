@@ -9,7 +9,7 @@ begin
 
   require File.join(File.dirname(__FILE__), "couch_model", "active_model")
 
-  puts "ActiveModel support is activated"
+  # ActiveModel support is activated
 rescue Gem::LoadError
-  puts "ActiveModel support is deactivated"
+  # ActiveModel support is deactivated
 end

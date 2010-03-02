@@ -54,7 +54,7 @@ module CouchModel
               (parameters.empty? ? "" : "?" + parameters.collect{ |key, value| "#{key}=#{URI.escape(value.to_s)}" }.reverse.join("&"))
           when "Net::HTTP::Post", "Net::HTTP::Put"
             request = request_class.new uri.path, { "Content-Type" => "application/json" }
-            request.body = JSON.dump(json)
+            request.body = JSON.dump(json) if json
             request
           else
             request_class.new uri.path

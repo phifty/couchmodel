@@ -47,7 +47,7 @@ describe CouchModel::Server do
 
     it "should return the names of all databases" do
       database_names = @server.database_names
-      database_names.should == [ "frontera_development", "frontera_test" ]
+      database_names.should == [ "development", "test" ]
     end
 
   end

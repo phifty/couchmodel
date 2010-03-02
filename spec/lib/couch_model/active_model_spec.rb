@@ -3,7 +3,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "li
 
 class ActiveTestModel < CouchModel::Base
 
-  setup_database :url => "http://localhost:5984/frontera_test"
+  setup_database :url => "http://localhost:5984/test"
 
   key_accessor :name
   key_accessor :email

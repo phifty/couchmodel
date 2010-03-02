@@ -18,8 +18,8 @@ describe CouchModel::Configuration do
 
     before :each do
       CouchModel::Configuration.databases.clear
-      @database = CouchModel::Database.new :name => "frontera_test"
-      @other = CouchModel::Database.new :name => "frontera_test"
+      @database = CouchModel::Database.new :name => "test"
+      @other = CouchModel::Database.new :name => "test"
     end
 
     def do_register
@@ -51,7 +51,7 @@ describe CouchModel::Configuration do
     describe "for an existing database" do
 
       before :each do
-        @database = CouchModel::Database.new :name => "frontera_test"
+        @database = CouchModel::Database.new :name => "test"
         CouchModel::Configuration.register_database @database
       end
 
@@ -82,7 +82,7 @@ describe CouchModel::Configuration do
 
     before :each do
       CouchModel::Configuration.designs.clear
-      @database = CouchModel::Database.new :name => "frontera_test"
+      @database = CouchModel::Database.new :name => "test"
       @design = CouchModel::Design.new @database, :id => "test_design"
     end
 
@@ -98,7 +98,7 @@ describe CouchModel::Configuration do
     before :each do
       CouchModel::Configuration.class_variable_set :@@designs, [ ]
 
-      @database = CouchModel::Database.new :name => "frontera_test"
+      @database = CouchModel::Database.new :name => "test"
       @design = CouchModel::Design.new @database, :id => "test_design"
       CouchModel::Configuration.register_design @design
     end

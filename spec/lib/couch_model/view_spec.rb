@@ -6,7 +6,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "li
 describe CouchModel::View do
 
   before :each do
-    @database = CouchModel::Database.new :name => "frontera_test"
+    @database = CouchModel::Database.new :name => "test"
     @design = CouchModel::Design.new @database, :id => "test"
     @view = CouchModel::View.new @design,
                                  :name    => "view name",

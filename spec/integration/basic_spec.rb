@@ -5,16 +5,16 @@ CouchModel::Configuration.design_directory = File.join File.dirname(__FILE__), "
 
 class TestUser < CouchModel::Base
 
-  setup_database :url => "http://localhost:5984/test"
+  setup_database :url => "http://localhost:5984/test", :setup_on_initialization => true, :delete_if_exists => true
 
   key_accessor :username
   key_accessor :email
 
 end
 
-TestUser.database.delete! if TestUser.database.exists?
-CouchModel::Configuration.setup_databases
-CouchModel::Configuration.setup_designs
+#TestUser.database.delete! if TestUser.database.exists?
+#CouchModel::Configuration.setup_databases
+#CouchModel::Configuration.setup_designs
 
 describe TestUser do
 

@@ -19,7 +19,7 @@
   :url:         "http://localhost:5984/_all_dbs"
   :response:
     :code:      "200"
-    :json:      [ "frontera_development", "frontera_test" ]
+    :json:      [ "development", "test" ]
 -
   :http_method: "get"
   :url:         "http://localhost:5984/_uuids"
@@ -31,11 +31,11 @@
       "uuids":  [ "uuid_1", "uuid_2", "uuid_3" ]
 -
   :http_method: "get"
-  :url:         "http://localhost:5984/frontera_test"
+  :url:         "http://localhost:5984/test"
   :response:
     :code:      "200"
     :json:
-      "db_name":    "frontera_test"
+      "db_name":    "test"
       "doc_count":  "0"
 -
   :http_method: "get"
@@ -45,7 +45,7 @@
     :json:
 -
   :http_method: "get"
-  :url:         "http://localhost:5984/frontera_test/test_model_1"
+  :url:         "http://localhost:5984/test/test_model_1"
   :response:
     :code:      "200"
     :json:
@@ -55,12 +55,12 @@
       "name":         "phil"
 -
   :http_method: "get"
-  :url:         "http://localhost:5984/frontera_test/invalid"
+  :url:         "http://localhost:5984/test/invalid"
   :response:
     :code:      "404"
 -
   :http_method: "post"
-  :url:         "http://localhost:5984/frontera_test"
+  :url:         "http://localhost:5984/test"
   :response:
     :code:      "201"
     :json:
@@ -69,7 +69,7 @@
       "rev":  "0"
 -
   :http_method: "put"
-  :url:         "http://localhost:5984/frontera_test/test_model_1"
+  :url:         "http://localhost:5984/test/test_model_1"
   :response:
     :code:      "200"
     :json:
@@ -78,7 +78,7 @@
       "rev":  "1"
 -
   :http_method: "delete"
-  :url:         "http://localhost:5984/frontera_test/test_model_1"
+  :url:         "http://localhost:5984/test/test_model_1"
   :parameters:
     "rev":  "0"
   :response:
@@ -89,7 +89,7 @@
       "rev":  "1"
 -
   :http_method: "get"
-  :url:         "http://localhost:5984/frontera_test/_design/test_design"
+  :url:         "http://localhost:5984/test/_design/test_design"
   :response:
     :code:      "200"
     :json:
@@ -102,7 +102,7 @@
           "reduce": "function(key, values, rereduce) { };"
 -
   :http_method: "put"
-  :url:         "http://localhost:5984/frontera_test/_design/test_design"
+  :url:         "http://localhost:5984/test/_design/test_design"
   :response:
     :code:      "201"
     :json:
@@ -111,7 +111,7 @@
       "rev":  "1"
 -
   :http_method: "get"
-  :url:         "http://localhost:5984/frontera_test/_all_docs"
+  :url:         "http://localhost:5984/test/_all_docs"
   :parameters:
     "include_docs": "true"
     "limit":        "1"
@@ -133,7 +133,7 @@
             "name":         "phil"
 -
   :http_method: "get"
-  :url:         "http://localhost:5984/frontera_test/_all_docs"
+  :url:         "http://localhost:5984/test/_all_docs"
   :parameters:
     "include_docs": "true"
     "limit":        "0"

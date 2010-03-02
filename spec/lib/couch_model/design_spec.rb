@@ -4,7 +4,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "li
 describe CouchModel::Design do
 
   before :each do
-    @database = CouchModel::Database.new :name => "frontera_test"
+    @database = CouchModel::Database.new :name => "test"
     @design = CouchModel::Design.from_file @database, File.join(File.dirname(__FILE__), "design", "base_test_model.design")
   end
 
