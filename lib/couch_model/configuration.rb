@@ -1,0 +1,68 @@
+
+module CouchModel
+
+  class Configuration
+
+    CLASS_KEY       = "model_class".freeze unless defined?(CLASS_KEY)
+    CLASS_VIEW_NAME = "all".freeze unless defined?(CLASS_VIEW_NAME)
+    
+    class << self
+
+      @@fake_transport  = false
+      @@databases       = [ ]
+      @@designs         = [ ]
+
+      def fake_transport=(value)
+        @@fake_transport = value        
+      end
+
+      def fake_transport
+        @@fake_transport
+      end
+
+      def design_directory=(value)
+        @@design_directory = value
+      end
+
+      def design_directory
+        class_variable_defined?(:@@design_directory) ? @@design_directory : ""
+      end
+
+      def register_database(database)
+        result = @@databases.select{ |element| element == database }.first
+        unless result
+          @@databases << database
+          result = database
+        end
+        result
+      end
+
+      def databases
+        @@databases
+      end
+
+      def setup_databases(options = { })
+        @@databases.each do |database|
+          database.setup! options
+        end
+      end
+
+      def register_design(design)
+        @@designs << design
+      end
+
+      def designs
+        @@designs
+      end
+
+      def setup_designs
+        @@designs.each do |design|
+          design.push
+        end
+      end
+      
+    end
+
+  end
+
+end

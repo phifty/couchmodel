@@ -1,0 +1,145 @@
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/"
+  :response:
+    :code:      "200"
+    :json:
+      "couchdb":  "Welcome"
+      "version":  "0.10.0"
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/_stats"
+  :response:
+    :code:      "200"
+    :json:
+      "httpd_status_codes":     "..."
+      "httpd_request_methods":  "..."
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/_all_dbs"
+  :response:
+    :code:      "200"
+    :json:      [ "frontera_development", "frontera_test" ]
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/_uuids"
+  :parameters:
+    :count:     3
+  :response:
+    :code:      "200"
+    :json:
+      "uuids":  [ "uuid_1", "uuid_2", "uuid_3" ]
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/frontera_test"
+  :response:
+    :code:      "200"
+    :json:
+      "db_name":    "frontera_test"
+      "doc_count":  "0"
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/new_database"
+  :response:
+    :code:      "404"
+    :json:
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/frontera_test/test_model_1"
+  :response:
+    :code:      "200"
+    :json:
+      "_id":          "test_model_1"
+      "_rev":         "0"
+      "model_class":  "BaseTestModel"
+      "name":         "phil"
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/frontera_test/invalid"
+  :response:
+    :code:      "404"
+-
+  :http_method: "post"
+  :url:         "http://localhost:5984/frontera_test"
+  :response:
+    :code:      "201"
+    :json:
+      "ok":   true
+      "id":   "test_model_2"
+      "rev":  "0"
+-
+  :http_method: "put"
+  :url:         "http://localhost:5984/frontera_test/test_model_1"
+  :response:
+    :code:      "200"
+    :json:
+      "ok":   true
+      "id":   "test_model_1"
+      "rev":  "1"
+-
+  :http_method: "delete"
+  :url:         "http://localhost:5984/frontera_test/test_model_1"
+  :parameters:
+    "rev":  "0"
+  :response:
+    :code:      "200"
+    :json:
+      "ok":   true
+      "id":   "test_model_1"
+      "rev":  "1"
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/frontera_test/_design/test_design"
+  :response:
+    :code:      "200"
+    :json:
+      "_id":      "_design/test_design"
+      "_rev":     "0"
+      "language": "javascript"
+      "views":
+        "test_view":
+          "map":    "function(document) { };"
+          "reduce": "function(key, values, rereduce) { };"
+-
+  :http_method: "put"
+  :url:         "http://localhost:5984/frontera_test/_design/test_design"
+  :response:
+    :code:      "201"
+    :json:
+      "ok":   true
+      "id":   "_design/test_design"
+      "rev":  "1"
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/frontera_test/_all_docs"
+  :parameters:
+    "include_docs": "true"
+    "limit":        "1"
+  :response:
+    :code:      "200"
+    :json:
+      "total_rows":   1
+      "offset":       0
+      "rows":
+        -
+          "id": "test_model_1"
+          "key":  "test_model_1"
+          "value":
+            "rev":  "0"
+          "doc":
+            "_id":          "test_model_1"
+            "_rev":         "0"
+            "model_class":  "CollectionTestModel"
+            "name":         "phil"
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/frontera_test/_all_docs"
+  :parameters:
+    "include_docs": "true"
+    "limit":        "0"
+  :response:
+    :code:      "200"
+    :json:
+      "total_rows":   1
+      "offset":       0
+      "rows":         [ ]

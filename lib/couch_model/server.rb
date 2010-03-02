@@ -1,0 +1,44 @@
+require File.join(File.dirname(__FILE__), "transport")
+
+module CouchModel
+
+  class Server
+
+    class Error < StandardError; end
+
+    attr_reader :host
+    attr_reader :port
+
+    def initialize(options = { })
+      @host = options[:host] || "localhost"
+      @port = options[:port] || "5984"
+    end
+
+    def ==(other)
+      other.is_a?(self.class) && @host == other.host && @port == other.port
+    end
+
+    def informations
+      Transport.request :get, url + "/", :expected_status_code => 200
+    end
+
+    def statistics
+      Transport.request :get, url + "/_stats", :expected_status_code => 200
+    end
+
+    def database_names
+      Transport.request :get, url + "/_all_dbs", :expected_status_code => 200
+    end
+
+    def uuids(count = 1)
+      response = Transport.request :get, url + "/_uuids", :expected_status_code => 200, :parameters => { :count => count }
+      response["uuids"]
+    end
+
+    def url
+      "http://#{@host}:#{@port}"
+    end
+
+  end
+
+end

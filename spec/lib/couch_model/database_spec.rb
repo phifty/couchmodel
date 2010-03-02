@@ -1,0 +1,165 @@
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "spec_helper"))
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "lib", "couch_model", "database"))
+
+describe CouchModel::Database do
+
+  before :each do
+    @database = CouchModel::Database.new :name => "frontera_test"
+  end
+
+  describe "==" do
+
+    before :each do
+      @other = CouchModel::Database.new :name => "frontera_test"
+    end
+
+    it "should be true when comparing two equal databases" do
+      @database.should == @other
+    end
+
+    it "should be false when comparing two different databases" do
+      @other = CouchModel::Database.new :name => "other"
+      @database.should_not == @other
+    end
+
+    it "should be false when comparing two databases with on different servers" do
+      @other = CouchModel::Database.new :name => "frontera_test", :server => CouchModel::Server.new(:host => "other")
+      @database.should_not == @other
+    end
+
+  end
+
+  describe "===" do
+
+    before :each do
+      @other = CouchModel::Database.new :name => "frontera_test"
+    end
+
+    it "should be true when comparing a database object with itself" do
+      @database.should === @database
+    end
+
+    it "should be false when comparing a database object with another database object" do
+      @database.should_not === @other
+    end
+
+  end
+
+  describe "create!" do
+
+    before :each do
+      @response = { :code => "201" }
+      CouchModel::Transport.stub!(:request).and_return(@response)
+    end
+
+    it "should create the database" do
+      CouchModel::Transport.should_receive(:request).with(:put, /frontera_test$/, anything).and_return(@response)
+      @database.create!
+    end
+
+  end
+
+  describe "delete!" do
+
+    before :each do
+      @response = { :code => "200" }
+      CouchModel::Transport.stub!(:request).and_return(@response)
+    end
+
+    it "should delete the database" do
+      CouchModel::Transport.should_receive(:request).with(:delete, /frontera_test$/, anything).and_return(@response)
+      @database.delete!
+    end
+
+  end
+
+  describe "setup!" do
+
+    before :each do
+      @database.stub!(:create!)
+      @database.stub!(:delete!)
+      @database.stub!(:exists?).and_return(true)
+      @options = { }
+    end
+
+    def do_setup
+      @database.setup! @options
+    end
+
+    describe "with delete_if_exists set to true" do
+
+      before :each do
+        @options.merge! :delete_if_exists => true
+      end
+
+      it "should delete an existing database" do
+        @database.should_receive(:delete!)
+        do_setup
+      end
+
+      it "should not delete a not-existing database" do
+        @database.stub!(:exists?).and_return(false)
+        @database.should_not_receive(:delete!)
+        do_setup
+      end
+
+      it "should create the database" do
+        @database.should_receive(:create!)
+        do_setup
+      end
+
+    end
+
+    describe "with delete_if_exists set to false" do
+
+      before :each do
+        @options.merge! :delete_if_exists => false
+      end
+
+      it "should create a not-existing database" do
+        @database.stub!(:exists?).and_return(false)
+        @database.should_receive(:create!)
+        do_setup
+      end
+
+      it "should not create an existing database" do
+        @database.should_not_receive(:create!)
+        do_setup
+      end
+
+    end
+
+  end
+
+  describe "informations" do
+
+    it "should return database informations" do
+      informations = @database.informations
+      informations.should have_key("db_name")
+      informations.should have_key("doc_count")
+    end
+
+  end
+
+  describe "exists?" do
+
+    it "should be true" do
+      @database.exists?.should be_true
+    end
+
+    it "should be false if no database with the given name exists" do
+      database = CouchModel::Database.new :name => "invalid"
+      database.exists?.should be_false
+    end
+
+  end
+
+  describe "documents" do
+
+    it "should return a collection" do
+      @database.documents.should be_instance_of(CouchModel::Collection)
+    end
+
+  end
+
+end
