@@ -1,2 +1,24 @@
 
 = CouchModel
+
+The intent of CouchModel is, to provide an easy interface handle CouchDB documents. It also comes with a ActiveModel
+implementation to integrate into an Rails 3 application.
+
+The current version is under development and open for everyone to find bugs and post them into the issue tracker.
+
+The code has been tested CouchDB 0.10.0 and Ruby 1.9.1.
+
+== Dependencies
+
+If CouchModel is used without Rails, the ruby standard library (tested with 1.9.1) if the only requirement.
+
+If the activemodel gem is installed, CouchModel::Base automatically provides an interface to Rails 3.
+
+To run the test suite, rspec (tested with 1.2.9) is required. A CouchDB instance is just required for the integration
+tests (task spec:integration).
+
+== Installation
+
+CouchModel is part of the gemcutter archive and can be installed with
+
+  gem install couchmodel
