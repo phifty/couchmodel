@@ -74,7 +74,7 @@ module CouchModel
     def request_parameters
       parameters = { "include_docs" => "true" }
       REQUEST_PARAMETER_KEYS.each do |key|
-        parameters[ key.to_s ] = JSON.dump @options[key] if @options[key]
+        parameters[ key.to_s ] = @options[key].is_a?(Array) ? JSON.dump(@options[key]) : @options[key].to_s if @options[key]
       end
       parameters
     end
