@@ -12,13 +12,32 @@ The code has been tested CouchDB 0.10.0 and Ruby 1.9.1.
 
 If CouchModel is used without Rails, the ruby standard library (tested with 1.9.1) if the only requirement.
 
-If the activemodel gem is installed, CouchModel::Base automatically provides an interface to Rails 3.
+If the activemodel gem is installed, CouchModel automatically provides an interface to Rails 3.
 
-To run the test suite, rspec (tested with 1.2.9) is required. A CouchDB instance is just required for the integration
-tests (task spec:integration).
+To run the test suite, (({rspec})) (tested with 1.2.9) is required. A CouchDB instance is just required for the
+integration tests (task (({spec:integration}))).
 
 == Installation
 
 CouchModel is part of the gemcutter archive and can be installed with
 
   gem install couchmodel
+
+== Getting started
+
+First of all, it's necessary to create a subclass of (({CouchModel::Base}))
+
+  class User < CouchModel::Base
+
+    setup_database :url => "http://localhost:5984/test",
+                   :setup_on_initialization => true,
+                   :delete_if_exists => false
+
+  end
+
+The (({setup_database})) method defines a database for the model. The (({url})) option is required and specifies the
+url of the database in the scheme (({http://[host]:[port]/[database_name]})). If the option
+(({setup_on_initialization})) is set to true, CouchModel will try to create the database when the model is initialized.
+If the option (({delete_if_exists})) is specified, the database will be deleted and re-created. If the option
+(({setup_on_initialization})) is not specified or false, the database setup be done manually by calling
+(({CouchModel::Configuration.setup_databases})) and (({CouchModel::Configuration.setup_designs})).
