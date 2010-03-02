@@ -6,7 +6,7 @@ implementation to integrate into an Rails 3 application.
 
 The current version is under development and open for everyone to find bugs and post them into the issue tracker.
 
-The code has been tested CouchDB 0.10.0 and Ruby 1.9.1.
+The code has been tested Ruby 1.9.1, CouchDB 0.10.0 and Rails 3.0.0.beta.
 
 == Dependencies
 
@@ -104,7 +104,7 @@ and is assigned to the method <tt>Model.all</tt>.
 
 == Rails integration
 
-The following steps has been tested with the first beta version of Rails 3.
+The following steps has been tested with the first beta version of Rails 3 (activemodel-3.0.0.beta).
 
 First of all, the <tt>couchmodel</tt> gem has to added to the dependencies. This can be done by adding
 
