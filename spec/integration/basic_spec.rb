@@ -12,10 +12,6 @@ class TestUser < CouchModel::Base
 
 end
 
-#TestUser.database.delete! if TestUser.database.exists?
-#CouchModel::Configuration.setup_databases
-#CouchModel::Configuration.setup_designs
-
 describe TestUser do
 
   use_real_transport!
