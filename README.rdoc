@@ -82,3 +82,36 @@ It's also possible to pass some extra options like +startkey+ or +key+ to these 
 
 CouchModel also creates by default a class view. This view simply selects all documents from the corresponding model
 and is assigned to the method +Model.all+.
+
+== Rails integration
+
+The following steps has been tested with the first beta version of Rails 3.
+
+First of all, the +couchmodel+ gem has to added to the dependencies. This can be done by adding
+
+  gem "couchmodel", :require => "couch_model"
+
+to the +Gemfile+.
+
+The configuration can be done by creating an initializer. Here is an example file
+(e.g. +config/initializer/couch_model.rb+).
+
+  CouchModel::Configuration.design_directory = File.join(Rails.root, "app", "models", "designs")
+
+  DATABASE = {
+    :test         => { :url => "http://localhost:5984/test",        :setup_on_initialization => true, :delete_if_exists => true }
+    :development  => { :url => "http://localhost:5984/development", :setup_on_initialization => true, :delete_if_exists => false },
+    :production   => { :url => "http://localhost:5984/production",  :setup_on_initialization => true, :delete_if_exists => false }
+  }[Rails.env.to_sym] unless defined?(DATABASE)
+
+This example uses an sub-directory of +app/models+ to search for the design documents. It also defined a constant
+named +DATABASE+ that is initialized with the right database setup for the each environment. This constant can then be
+used to define the models.
+
+  class User < CouchModel::Base
+
+    setup_database DATABASE
+
+    ...
+
+  end
