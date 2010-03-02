@@ -15,11 +15,11 @@ Gem::Specification.new do |specification|
   specification.extra_rdoc_files  = [ "README.rdoc" ]
   specification.rdoc_options      = [ "--line-numbers", "--main", "README.rdoc" ]
   specification.require_paths     = [ "lib" ]
-  specification.rubygems_version  = "1.3.5"
+  specification.rubygems_version  = "1.3.6"
 
   specification.files = [ "README.rdoc", "LICENSE", "Rakefile" ]
-  specification.files << Dir["lib/**/*"]
-  specification.files << Dir["spec/**/*"]
+  specification.files += Dir["lib/**/*"]
+  specification.files += Dir["spec/**/*"]
 
   specification.test_files = Dir["spec/**/*_spec.rb"]
 end
