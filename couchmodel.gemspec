@@ -12,10 +12,11 @@ Gem::Specification.new do |specification|
   specification.summary     = "CouchModel provides an interface to easly handle CouchDB documents."
   specification.description = "CouchModel provides an interface to easly handle CouchDB documents. It also comes with a ActiveModel implementation to integrate into an Rails 3 application."
 
-  specification.extra_rdoc_files  = [ "README.rdoc" ]
-  specification.rdoc_options      = [ "--line-numbers", "--main", "README.rdoc" ]
-  specification.require_paths     = [ "lib" ]
-  specification.rubygems_version  = "1.3.6"
+  specification.extra_rdoc_files      = [ "README.rdoc" ]
+  specification.rdoc_options          = [ "--line-numbers", "--main", "README.rdoc" ]
+  specification.require_paths         = [ "lib" ]
+  specification.required_ruby_version = ">= 1.9.1"
+  specification.rubygems_version      = "1.3.6"
 
   specification.files = [ "README.rdoc", "LICENSE", "Rakefile" ]
   specification.files += Dir["lib/**/*"]

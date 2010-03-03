@@ -19,21 +19,9 @@ integration tests (task <tt>spec:integration</tt>).
 
 == Installation
 
-Clone the repository
+The gem is part of the gemcutter archive. It can be installed by simply type
 
-  git clone git@github.com:phifty/couchmodel.git
-
-Build the gem
-
-  cd couchmodel
-  gem build couchmodel.gemspec
-
-Install the gem
-
-  gem install couchmodel-0.1.0.beta1.gem
-
-In the future - when version 0.1.0.beta1 is released - the first two steps will not be necessary anymore. CouchModel
-will be part of the gemcutter archive.
+  gem install couchmodel
 
 == Defining a model
 
