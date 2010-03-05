@@ -53,6 +53,17 @@
       "_rev":         "0"
       "model_class":  "BaseTestModel"
       "name":         "phil"
+      "related_id":   "test_model_2"
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/test/test_model_2"
+  :response:
+    :code:      "200"
+    :json:
+      "_id":          "test_model_2"
+      "_rev":         "0"
+      "model_class":  "BaseTestModel"
+      "name":         "keppla"
 -
   :http_method: "get"
   :url:         "http://localhost:5984/test/invalid"

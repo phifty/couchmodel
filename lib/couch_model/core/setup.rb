@@ -26,7 +26,6 @@ module CouchModel
           initialize_database options
           initialize_design
           generate_class_view
-          define_view_methods
           push_design options
         end
 
@@ -35,7 +34,17 @@ module CouchModel
         end
 
         def design
-          @design
+          @design || raise(StandardError, "no database defined!")
+        end
+
+        def method_missing(method_name, *arguments, &block)
+          view = find_view method_name
+          view ? view.collection(*arguments) : super
+        end
+
+        def respond_to?(method_name)
+          view = find_view method_name
+          view ? true : super
         end
 
         private
@@ -61,21 +70,15 @@ module CouchModel
           @design.generate_view Configuration::CLASS_VIEW_NAME
         end
 
-        def define_view_methods
-          @design.views.each do |view|
-            self.class.class_eval do
-              define_method view.name do |*arguments|
-                view.collection *arguments
-              end
-            end
-          end
-        end
-
         def push_design(options)
           setup_on_initialization = options[:setup_on_initialization] || false
           @design.push if setup_on_initialization
         end
-        
+
+        def find_view(name)
+          @design ? @design.views.select{ |view| view.name == name.to_s }.first : nil
+        end
+
       end
 
     end

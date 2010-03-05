@@ -11,4 +11,12 @@ describe String do
 
   end
 
+  describe "camelize" do
+
+    it "should convert underscore to camelcase" do
+      "test_model".camelize.should == "TestModel"
+    end
+
+  end
+
 end

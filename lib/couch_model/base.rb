@@ -7,6 +7,7 @@ require File.join(File.dirname(__FILE__), "design")
 require File.join(File.dirname(__FILE__), "core", "setup")
 require File.join(File.dirname(__FILE__), "core", "accessor")
 require File.join(File.dirname(__FILE__), "core", "finder")
+require File.join(File.dirname(__FILE__), "core", "association")
 require 'uri'
 
 module CouchModel
@@ -27,7 +28,7 @@ module CouchModel
     end
 
     def attributes=(attributes)
-      attributes.each { |key, value| self.send :"#{key}=", value }
+      attributes.each { |key, value| self.send :"#{key}=", value if self.respond_to?(:"#{key}=") }
     end
 
     def id
@@ -87,6 +88,8 @@ module CouchModel
       super
     end
 
+    include CouchModel::Core::Association
+    
     private
 
     def rev=(value)
