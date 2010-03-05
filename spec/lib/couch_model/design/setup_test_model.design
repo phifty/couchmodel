@@ -1,0 +1,10 @@
+:id:        "test_design"
+:language:  "javascript"
+:views:
+  "test_view":
+    :map:
+      function(document) {
+      };
+    :reduce:
+      function(key, values, rereduce) {
+      };

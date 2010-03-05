@@ -4,11 +4,15 @@ require File.join(File.dirname(__FILE__), "transport")
 require File.join(File.dirname(__FILE__), "server")
 require File.join(File.dirname(__FILE__), "database")
 require File.join(File.dirname(__FILE__), "design")
+require File.join(File.dirname(__FILE__), "core", "setup")
+require File.join(File.dirname(__FILE__), "core", "accessor")
 require 'uri'
 
 module CouchModel
 
   class Base
+    include CouchModel::Core::Setup
+    include CouchModel::Core::Accessor
 
     class Error < StandardError; end
     class NotFoundError < StandardError; end
@@ -18,10 +22,6 @@ module CouchModel
     def initialize(attributes = { })
       @attributes = { Configuration::CLASS_KEY => self.class.to_s }
       self.attributes = attributes
-    end
-
-    def database
-      self.class.database
     end
 
     def attributes=(attributes)
@@ -43,7 +43,7 @@ module CouchModel
     alias :_rev :rev
 
     def ==(other)
-      other.is_a?(Base) && self.id == other.id
+      self.id == other.id
     end
 
     def new?
@@ -110,81 +110,10 @@ module CouchModel
 
     class << self
 
-      def setup_database(options = { })
-        initialize_database options
-        initialize_design
-        generate_class_view
-        define_view_methods
-        push_design options
-      end
-
-      def key_reader(key)
-        define_method :"#{key}" do
-          @attributes[key.to_s]
-        end
-      end
-
-      def key_writer(key)
-        define_method :"#{key}=" do |value|
-          @attributes[key.to_s] = value
-        end
-      end
-
-      def key_accessor(key)
-        key_reader key
-        key_writer key
-      end
-
-      def database
-        @database || raise(StandardError, "no database defined!")
-      end
-
-      def design
-        @design
-      end
-
       def find(id)
         document = new :id => id
         document.load
         document
-      end
-
-      private
-
-      def initialize_database(options)
-        url                     = options[:url] || raise(ArgumentError, "no url was given to define the database")
-        setup_on_initialization = options[:setup_on_initialization] || false
-        
-        uri = URI.parse url
-        server = Server.new :host => uri.host, :port => uri.port
-        database = Database.new :server => server, :name => uri.path.gsub("/", "")
-        @database = Configuration.register_database database
-
-        @database.setup! options if setup_on_initialization && @database === database
-      end
-
-      def initialize_design
-        @design = Design.new @database, self, :id => self.to_s.underscore
-        Configuration.register_design @design
-      end
-
-      def generate_class_view
-        @design.generate_view Configuration::CLASS_VIEW_NAME
-      end
-
-      def define_view_methods
-        @design.views.each do |view|
-          self.class.class_eval do
-            define_method view.name do |*arguments|
-              view.collection *arguments
-            end
-          end
-        end
-      end
-
-      def push_design(options)
-        setup_on_initialization = options[:setup_on_initialization] || false
-        @design.push if setup_on_initialization
       end
 
     end
