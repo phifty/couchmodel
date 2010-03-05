@@ -164,13 +164,12 @@ module CouchModel
       end
 
       def initialize_design
-        filename = File.join Configuration.design_directory, "#{self.to_s.underscore}.design"
-        @design = File.exists?(filename) ? Design.from_file(@database, filename) : Design.new(@database, :id => self.to_s.underscore)
+        @design = Design.new @database, self, :id => self.to_s.underscore
         Configuration.register_design @design
       end
 
       def generate_class_view
-        @design.generate_view Configuration::CLASS_VIEW_NAME, self.to_s
+        @design.generate_view Configuration::CLASS_VIEW_NAME
       end
 
       def define_view_methods

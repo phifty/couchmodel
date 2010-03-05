@@ -23,7 +23,6 @@ describe BaseTestModel do
       @design = BaseTestModel.design
       @design.stub!(:push)
       CouchModel::Design.stub!(:new).and_return(@design)
-      CouchModel::Design.stub!(:from_file).and_return(@design)
 
       @options = { :url => "http://localhost:5984/test" }
     end

@@ -3,11 +3,15 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "li
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "lib", "couch_model", "design"))
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "lib", "couch_model", "view"))
 
+CouchModel::Configuration.design_directory = File.join File.dirname(__FILE__), "design"
+
 describe CouchModel::View do
 
   before :each do
+    @model_class = Object
+    @model_class.stub!(:to_s).and_return("TestModel")
     @database = CouchModel::Database.new :name => "test"
-    @design = CouchModel::Design.new @database, :id => "test"
+    @design = CouchModel::Design.new @database, @model_class
     @view = CouchModel::View.new @design,
                                  :name    => "view name",
                                  :map     => "map function",
@@ -16,16 +20,60 @@ describe CouchModel::View do
 
   describe "initialize" do
 
+    before :each do
+      @options = { :name => "view name" }
+    end
+
+    def do_initialize(options = { })
+      @view = CouchModel::View.new @design, @options.merge(options)
+    end
+
     it "should set the name" do
+      do_initialize
       @view.name.should == "view name"
     end
 
-    it "should set the map function" do
-      @view.map.should == "map function"
+    context "using function generator" do
+
+      before :each do
+        @options.merge! :keys => [ "test key" ]
+      end
+
+      it "should generate the map function" do
+        do_initialize
+        @view.map.should ==
+"""function(document) {
+  if (document['#{CouchModel::Configuration::CLASS_KEY}'] == 'TestModel' && document['test key']) {
+    emit(document['test key'], null);
+  }
+}
+"""
+      end
+
+      it "should set the reduce function to nil" do
+        do_initialize
+        @view.reduce.should be_nil
+      end
+
     end
 
-    it "should set the reduce function" do
-      @view.reduce.should == "reduce function"
+    context "using explizit functions" do
+
+      before :each do
+        @options.merge! :map    => "map function",
+                        :reduce => "reduce function"
+      end
+
+      it "should set the map function" do
+        do_initialize
+        @view.map.should == "map function"
+      end
+
+      it "should set the reduce function" do
+        do_initialize
+        @view.reduce.should == "reduce function"
+      end
+
     end
 
   end
@@ -62,12 +110,11 @@ describe CouchModel::View do
   describe "generate_functions" do
 
     before :each do
-      @class_name = "TestModel"
-      @options    = { }
+      @options = { }
     end
 
     def do_generate
-      @view.generate_functions @class_name, @options
+      @view.generate_functions @options
     end
 
     describe "without any keys given" do
@@ -76,7 +123,7 @@ describe CouchModel::View do
         do_generate
         @view.map.should ==
 """function(document) {
-  if (document['#{CouchModel::Configuration::CLASS_KEY}'] == '#{@class_name}') {
+  if (document['#{CouchModel::Configuration::CLASS_KEY}'] == 'TestModel') {
     emit(document['_id'], null);
   }
 }
@@ -100,7 +147,7 @@ describe CouchModel::View do
         do_generate
         @view.map.should ==
 """function(document) {
-  if (document['#{CouchModel::Configuration::CLASS_KEY}'] == '#{@class_name}' && document['foo'] && document['bar']) {
+  if (document['#{CouchModel::Configuration::CLASS_KEY}'] == 'TestModel' && document['foo'] && document['bar']) {
     emit([ document['foo'], document['bar'] ], null);
   }
 }

@@ -1,11 +1,78 @@
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "spec_helper"))
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "lib", "couch_model", "design"))
 
+CouchModel::Configuration.design_directory = File.join File.dirname(__FILE__), "design"
+
 describe CouchModel::Design do
 
   before :each do
+    @model_class = Object
+    @model_class.stub!(:to_s).and_return("BaseTestModel")
     @database = CouchModel::Database.new :name => "test"
-    @design = CouchModel::Design.from_file @database, File.join(File.dirname(__FILE__), "design", "base_test_model.design")
+    @design = CouchModel::Design.new @database, @model_class, :language => "another_language"
+  end
+
+  describe "initialize" do
+
+    it "should set the database" do
+      @design.database.should == @database
+    end
+
+    it "should set the model class" do
+      @design.model_class.should == @model_class
+    end
+
+    it "should set the attributes" do
+      @design.language.should == "another_language"
+    end
+
+  end
+
+  describe "filename" do
+
+    it "should return the name of the expected file" do
+      @design.filename.should == File.join(CouchModel::Configuration.design_directory, "base_test_model.design")
+    end
+
+  end
+
+  describe "load_file" do
+
+    def do_load
+      @design.load_file
+    end
+
+    context "file does exists" do
+
+      before :each do
+        File.stub!(:exists?).and_return(true)
+      end
+
+      it "should set the attributes" do
+        do_load
+        @design.id.should == "test_design"
+        @design.language.should == "javascript"
+        @design.views.should_not be_nil
+      end
+      
+      it "should return true" do
+        do_load.should be_true
+      end
+
+    end
+
+    context "file doesn't exists" do
+
+      before :each do
+        File.stub!(:exists?).and_return(false)
+      end
+
+      it "should return false" do
+        do_load.should be_false
+      end
+
+    end
+
   end
 
   describe "views=" do
@@ -27,7 +94,7 @@ describe CouchModel::Design do
   describe "generate_view" do
 
     def do_generate
-      @design.generate_view "test", "TestModel", :keys => [ :test ]
+      @design.generate_view "test", :keys => [ :test ]
     end
 
     it "should return the view" do
@@ -47,7 +114,7 @@ describe CouchModel::Design do
     it "should return a hash with all the design data" do
       @design.to_hash.should == {
         "_id"       => "_design/test_design",
-        "language"  => "javascript",
+        "language"  => "another_language",
         "views"     => { "test_view" => {"map" => "function(document) { };", "reduce" => "function(key, values, rereduce) { };" } }
       }
     end
@@ -70,15 +137,6 @@ describe CouchModel::Design do
 
     it "should push the design" do
       do_push.should be_true
-    end
-
-  end
-
-  describe "from_file" do
-
-    it "should load the design from a file" do
-      @design.id.should == "test_design"
-      @design.views.first.should be_instance_of(CouchModel::View)
     end
 
   end

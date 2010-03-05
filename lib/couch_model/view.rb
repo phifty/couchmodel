@@ -13,8 +13,10 @@ module CouchModel
     def initialize(design, attributes = { })
       @design = design
       @name   = attributes[:name]
-      @map    = attributes[:map]
-      @reduce = attributes[:reduce]
+
+      generate_functions attributes
+      @map    = attributes[:map]    if attributes[:map]
+      @reduce = attributes[:reduce] if attributes[:reduce]
     end
 
     def collection(options = { })
@@ -29,7 +31,7 @@ module CouchModel
       "#{@design.url}/_view/#{@name}"
     end
 
-    def generate_functions(class_name, options = { })
+    def generate_functions(options = { })
       keys = [ (options[:keys] || "_id") ].flatten
 
       emit_values  = keys.map{ |key| "document['#{key}']" }
@@ -37,7 +39,7 @@ module CouchModel
 
       @map =
 """function(document) {
-  if (document['#{Configuration::CLASS_KEY}'] == '#{class_name}'#{check_values.empty? ? "" : " && " + check_values.join(" && ")}) {
+  if (document['#{Configuration::CLASS_KEY}'] == '#{@design.model_class.to_s}'#{check_values.empty? ? "" : " && " + check_values.join(" && ")}) {
     emit(#{emit_values.size == 1 ? emit_values.first : "[ " + emit_values.join(", ") + " ]"}, null);
   }
 }

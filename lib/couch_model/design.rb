@@ -1,3 +1,4 @@
+require File.join(File.dirname(__FILE__), "configuration")
 require File.join(File.dirname(__FILE__), "transport")
 require File.join(File.dirname(__FILE__), "base")
 require File.join(File.dirname(__FILE__), "view")
@@ -8,16 +9,35 @@ module CouchModel
   class Design
 
     attr_reader   :database
+    attr_reader   :model_class
     attr_accessor :id
     attr_reader   :rev
     attr_accessor :language
     attr_reader   :views
 
-    def initialize(database, attributes = { })
+    def initialize(database, model_class, attributes = { })
       @database     = database
+      @model_class  = model_class
+      @language     = "javascript"
+      @views        = [ ]
+
+      load_file
+      self.id       = attributes[:id]       if attributes[:id]
+      self.language = attributes[:language] if attributes[:language]
+      self.views    = attributes[:views]    if attributes[:views]
+    end
+
+    def filename
+      @filename ||= File.join(CouchModel::Configuration.design_directory, "#{model_class.to_s.underscore}.design")
+    end
+
+    def load_file
+      return false unless File.exists?(filename)
+      attributes = YAML::load_file filename
       self.id       = attributes[:id]
-      self.language = attributes[:language] || "javascript"
+      self.language = attributes[:language]
       self.views    = attributes[:views]
+      true
     end
 
     def views=(view_hash)
@@ -27,9 +47,8 @@ module CouchModel
       end if view_hash.is_a?(Hash)
     end
 
-    def generate_view(name, class_name, options = { })
-      view = View.new self, :name => name
-      view.generate_functions class_name, options
+    def generate_view(name, options = { })
+      view = View.new self, options.merge(:name => name)
       @views.insert 0, view
       view
     end
@@ -67,14 +86,6 @@ module CouchModel
     private
 
     attr_writer :rev
-
-    class << self
-
-      def from_file(database, filename)
-        new database, YAML::load_file(filename)
-      end
-
-    end
 
   end
 
