@@ -166,14 +166,4 @@ describe BaseTestModel do
     
   end
 
-  describe "find" do
-
-    it "should find the model" do
-      model = BaseTestModel.find "test_model_1"
-      model.should be_instance_of(BaseTestModel)
-      model.name.should == "phil"
-    end
-    
-  end
-
 end

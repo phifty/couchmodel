@@ -6,6 +6,7 @@ require File.join(File.dirname(__FILE__), "database")
 require File.join(File.dirname(__FILE__), "design")
 require File.join(File.dirname(__FILE__), "core", "setup")
 require File.join(File.dirname(__FILE__), "core", "accessor")
+require File.join(File.dirname(__FILE__), "core", "finder")
 require 'uri'
 
 module CouchModel
@@ -13,6 +14,7 @@ module CouchModel
   class Base
     include CouchModel::Core::Setup
     include CouchModel::Core::Accessor
+    include CouchModel::Core::Finder
 
     class Error < StandardError; end
     class NotFoundError < StandardError; end
@@ -106,16 +108,6 @@ module CouchModel
       true
     rescue Transport::UnexpectedStatusCodeError
       false
-    end
-
-    class << self
-
-      def find(id)
-        document = new :id => id
-        document.load
-        document
-      end
-
     end
 
   end
