@@ -16,6 +16,7 @@ module CouchModel
     include CouchModel::Core::Setup
     include CouchModel::Core::Accessor
     include CouchModel::Core::Finder
+    include CouchModel::Core::Association
 
     class Error < StandardError; end
     class NotFoundError < StandardError; end
@@ -88,8 +89,6 @@ module CouchModel
       super
     end
 
-    include CouchModel::Core::Association
-    
     private
 
     def rev=(value)

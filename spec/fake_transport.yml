@@ -133,7 +133,7 @@
       "offset":       0
       "rows":
         -
-          "id": "test_model_1"
+          "id":   "test_model_1"
           "key":  "test_model_1"
           "value":
             "rev":  "0"
@@ -154,3 +154,25 @@
       "total_rows":   1
       "offset":       0
       "rows":         [ ]
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/test/_design/association_test_model_one/_view/by_related_id"
+  :parameters:
+    "include_docs": "true"
+    "key":          "\"test_model_2\""
+  :response:
+    :code:      "200"
+    :json:
+      "total_rows":   1
+      "offset":       0
+      "rows":
+        -
+          "id":   "test_model_1"
+          "key":  "test_model_2"
+          "value":
+            "rev":  "0"
+          "doc":
+            "_id":          "test_model_1"
+            "_rev":         "0"
+            "model_class":  "AssociationTestModelOne"
+            "name":         "phil"

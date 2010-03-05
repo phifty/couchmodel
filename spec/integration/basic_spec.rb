@@ -10,13 +10,15 @@ class User < CouchModel::Base
   key_accessor :username
   key_accessor :email
 
+  has_many :memberships, :class_name => "Membership", :view_name => :by_user_id
+
 end
 
 class Membership < CouchModel::Base
 
   setup_database :url => "http://localhost:5984/test", :setup_on_initialization => true, :delete_if_exists => true
 
-  belongs_to :user, :class_name => User.to_s
+  belongs_to :user, :class_name => "User"
 
 end
 
@@ -64,17 +66,23 @@ describe "Integration" do
   context "on saved models" do
 
     before :each do
-      @user = User.new :username => "user", :email => "email"
-      @user.save
-      @membership = Membership.new
-      @membership.user = @user
-      @membership.save
+      @user_one = User.new :username => "user one", :email => "email one"
+      @user_one.save
+      @user_two = User.new :username => "user two", :email => "email two"
+      @user_two.save
+      @membership_one = Membership.new
+      @membership_one.user = @user_one
+      @membership_one.save
+      @membership_two = Membership.new
+      @membership_two.user = @user_two
+      @membership_two.save
     end
 
     describe "all" do
 
       it "should include the saved user" do
-        User.all.should include(@user)
+        User.all.should include(@user_one)
+        User.all.should include(@user_two)
       end
 
     end
@@ -82,7 +90,22 @@ describe "Integration" do
     describe "belongs_to" do
 
       it "should return the related model" do
-        @membership.user.should == @user
+        @membership_one.user.should == @user_one
+        @membership_two.user.should == @user_two
+      end
+
+    end
+
+    describe "has_many" do
+
+      it "should include the related model" do
+        @user_one.memberships.should include(@membership_one)
+        @user_two.memberships.should include(@membership_two)
+      end
+
+      it "should not include the not-related model" do
+        @user_one.memberships.should_not include(@membership_two)
+        @user_two.memberships.should_not include(@membership_one)
       end
 
     end
