@@ -40,13 +40,13 @@ module CouchModel
           view_name   = options[:view_name]   || raise(ArgumentError, "no view_name is given")
           query       = options[:query]
 
-          define_method :query, &query if query.is_a?(Proc)
+          define_method :"#{name}_query", &query if query.is_a?(Proc)
 
           define_method :"#{name}" do |*arguments|
             klass = Object.const_get class_name
-            query = if self.respond_to?(:query)
-              arguments << nil while arguments.length < self.method(:query).arity
-              self.query *arguments
+            query = if self.respond_to?(:"#{name}_query")
+              arguments << nil while arguments.length < self.method(:"#{name}_query").arity
+              self.send :"#{name}_query", *arguments
             else
               { :key => "\"#{self.id}\"" }
             end
