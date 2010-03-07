@@ -4,19 +4,19 @@ require File.join(File.dirname(__FILE__), "transport")
 require File.join(File.dirname(__FILE__), "server")
 require File.join(File.dirname(__FILE__), "database")
 require File.join(File.dirname(__FILE__), "design")
-require File.join(File.dirname(__FILE__), "core", "setup")
-require File.join(File.dirname(__FILE__), "core", "accessor")
-require File.join(File.dirname(__FILE__), "core", "finder")
-require File.join(File.dirname(__FILE__), "core", "association")
+require File.join(File.dirname(__FILE__), "base", "setup")
+require File.join(File.dirname(__FILE__), "base", "accessor")
+require File.join(File.dirname(__FILE__), "base", "finder")
+require File.join(File.dirname(__FILE__), "base", "association")
 require 'uri'
 
 module CouchModel
 
   class Base
-    include CouchModel::Core::Setup
-    include CouchModel::Core::Accessor
-    include CouchModel::Core::Finder
-    include CouchModel::Core::Association
+    include CouchModel::Base::Setup
+    include CouchModel::Base::Accessor
+    include CouchModel::Base::Finder
+    include CouchModel::Base::Association
 
     class Error < StandardError; end
     class NotFoundError < StandardError; end

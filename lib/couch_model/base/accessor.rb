@@ -1,7 +1,7 @@
 
 module CouchModel
 
-  module Core
+  class Base
 
     module Accessor
 
