@@ -74,21 +74,48 @@ A design document should look like this
           ...
         };
     "view_name_2":
-      :map:
-        function(document) {
-          ...
-        };
-      :reduce:
-        function(key, values, rereduce) {
-          ...
-        };
+      :keys: [ "key_one", "key_two" ]
     ...
 
 It will create the methods <tt>Model.view_name_1</tt> and <tt>Model.view_name_2</tt>, which returns the result of the
 related view. It's also possible to pass some extra options like <tt>startkey</tt> or <tt>key</tt> to these methods.
 
+The view can be defined by write down a map and a reduce function or provide the <tt>keys</tt> array. If the
+<tt>keys</tt> array is given, CouchModel will generate a map function that emits the given array of document keys. The
+reduce function will be set to null.
+
 CouchModel also creates by default a class view. This view simply selects all documents from the corresponding model
 and is assigned to the method <tt>Model.all</tt>.
+
+== Associations
+
+CouchModel provides support for simple association definition. Currently, the method <tt>belongs_to</tt> and
+<tt>has_many</tt> are implmented.
+
+  class User < CouchModel::Base
+
+    ...
+
+    belongs_to :session, :class_name => "UserSession"
+
+    has_many :memberships,
+             :class_name => "Membership",
+             :view_name  => :by_user_id_and_created_at
+             :query      => proc { |created_at| { :startkey => [ self.id, (create_at || nil) ], :endkey => [ self.id, (created_at || { }) ] } }
+
+  end
+
+In this example, the <tt>belongs_to</tt> adds a <tt>key_accessor</tt> named <tt>session_id</tt> to the user and also
+generates getters and setters for the session object itself (<tt>session</tt> and <tt>session=</tt>).
+
+The <tt>has_many</tt> acts as a wrapper for the specified view. The previously defined view
+<em>by_user_id_and_created_at</em> emits membership-documents by thier <tt>user_id</tt> and the <tt>created_at</tt>
+date. The given query option specifes a method that returns a query hash for the specifed view. The arguments for this
+method can be passed membership association method.
+
+  user.membership(created_at)
+
+The returned <tt>CouchModel::Collection</tt> can be treated as an (read-only) array.
 
 == Rails integration
 
