@@ -1,10 +1,5 @@
 :id:        "test_design"
 :language:  "javascript"
 :views:
-  "by_related_id":
-    :map:
-      function(document) {
-      };
-    :reduce:
-      function(key, values, rereduce) {
-      };
+  "by_related_id_and_name":
+    :keys:  [ "related_id", "name" ]

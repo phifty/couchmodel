@@ -19,7 +19,10 @@ class AssociationTestModelTwo < CouchModel::Base
 
   key_accessor :name
 
-  has_many :related, :class_name => "AssociationTestModelOne", :view_name => :by_related_id
+  has_many :related,
+           :class_name  => "AssociationTestModelOne",
+           :view_name   => :by_related_id_and_name,
+           :query       => lambda { |name| { :startkey => [ self.id, (name || nil) ], :endkey => [ self.id, (name || { }) ] } }
 
 end
 
@@ -103,6 +106,7 @@ describe AssociationTestModelTwo do
 
     it "should include the test model one" do
       @model.related.should include(@other)
+      @model.related(@other.name).should include(@other)
     end
 
   end

@@ -10,7 +10,10 @@ class User < CouchModel::Base
   key_accessor :username
   key_accessor :email
 
-  has_many :memberships, :class_name => "Membership", :view_name => :by_user_id
+  has_many :memberships,
+           :class_name  => "Membership",
+           :view_name   => :by_user_id_and_created_at,
+           :query       => lambda { |created_at| { :startkey => [ self.id, (created_at || nil) ], :endkey => [ self.id, (created_at || { }) ] } }
 
 end
 
@@ -18,11 +21,13 @@ class Membership < CouchModel::Base
 
   setup_database :url => "http://localhost:5984/test", :setup_on_initialization => true, :delete_if_exists => true
 
+  key_accessor :created_at
+
   belongs_to :user, :class_name => "User"
 
 end
 
-describe "Integration" do
+describe "integration" do
 
   use_real_transport!
 
@@ -70,10 +75,10 @@ describe "Integration" do
       @user_one.save
       @user_two = User.new :username => "user two", :email => "email two"
       @user_two.save
-      @membership_one = Membership.new
+      @membership_one = Membership.new :created_at => "yesterday"
       @membership_one.user = @user_one
       @membership_one.save
-      @membership_two = Membership.new
+      @membership_two = Membership.new :created_at => "yesterday"
       @membership_two.user = @user_two
       @membership_two.save
     end
@@ -106,6 +111,11 @@ describe "Integration" do
       it "should not include the not-related model" do
         @user_one.memberships.should_not include(@membership_two)
         @user_two.memberships.should_not include(@membership_one)
+      end
+
+      it "should use the selector" do
+        @user_one.memberships("yesterday").should include(@membership_one)
+        @user_one.memberships("today").should_not include(@membership_one)
       end
 
     end

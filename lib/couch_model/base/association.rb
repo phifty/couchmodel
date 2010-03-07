@@ -38,10 +38,19 @@ module CouchModel
         def has_many(name, options = { })
           class_name  = options[:class_name]  || name.to_s.camelize
           view_name   = options[:view_name]   || raise(ArgumentError, "no view_name is given")
+          query       = options[:query]
+
+          define_method :query, &query if query.is_a?(Proc)
 
           define_method :"#{name}" do |*arguments|
             klass = Object.const_get class_name
-            klass.send(:"#{view_name}", :key => "\"#{self.id}\"")
+            query = if self.respond_to?(:query)
+              arguments << nil while arguments.length < self.method(:query).arity
+              self.query *arguments
+            else
+              { :key => "\"#{self.id}\"" }
+            end
+            klass.send :"#{view_name}", query
           end
         end
 
