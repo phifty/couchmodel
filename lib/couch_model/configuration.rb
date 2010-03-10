@@ -42,8 +42,12 @@ module CouchModel
       end
 
       def setup_databases(options = { })
+        delete_if_exists  = options[:delete_if_exists]  || false
+        create_if_missing = options[:create_if_missing] || false
+
         @@databases.each do |database|
-          database.setup! options
+          database.delete_if_exists!  if delete_if_exists
+          database.create_if_missing! if create_if_missing
         end
       end
 

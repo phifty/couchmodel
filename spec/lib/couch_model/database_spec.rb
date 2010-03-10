@@ -59,6 +59,26 @@ describe CouchModel::Database do
 
   end
 
+  describe "create_if_missing!" do
+
+    before :each do
+      @database.stub!(:create!)      
+    end
+
+    it "should not call create! if the database exists" do
+      @database.stub!(:exists?).and_return(true)
+      @database.should_not_receive(:create!)
+      @database.create_if_missing!
+    end
+
+    it "should call create! if the database not exists" do
+      @database.stub!(:exists?).and_return(false)
+      @database.should_receive(:create!)
+      @database.create_if_missing!
+    end
+
+  end
+
   describe "delete!" do
 
     before :each do
@@ -73,60 +93,22 @@ describe CouchModel::Database do
 
   end
 
-  describe "setup!" do
+  describe "delete_if_exists!" do
 
     before :each do
-      @database.stub!(:create!)
       @database.stub!(:delete!)
+    end
+
+    it "should call delete! if the database exists" do
       @database.stub!(:exists?).and_return(true)
-      @options = { }
+      @database.should_receive(:delete!)
+      @database.delete_if_exists!
     end
 
-    def do_setup
-      @database.setup! @options
-    end
-
-    describe "with delete_if_exists set to true" do
-
-      before :each do
-        @options.merge! :delete_if_exists => true
-      end
-
-      it "should delete an existing database" do
-        @database.should_receive(:delete!)
-        do_setup
-      end
-
-      it "should not delete a not-existing database" do
-        @database.stub!(:exists?).and_return(false)
-        @database.should_not_receive(:delete!)
-        do_setup
-      end
-
-      it "should create the database" do
-        @database.should_receive(:create!)
-        do_setup
-      end
-
-    end
-
-    describe "with delete_if_exists set to false" do
-
-      before :each do
-        @options.merge! :delete_if_exists => false
-      end
-
-      it "should create a not-existing database" do
-        @database.stub!(:exists?).and_return(false)
-        @database.should_receive(:create!)
-        do_setup
-      end
-
-      it "should not create an existing database" do
-        @database.should_not_receive(:create!)
-        do_setup
-      end
-
+    it "should not call delete! if the database not exists" do
+      @database.stub!(:exists?).and_return(false)
+      @database.should_not_receive(:delete!)
+      @database.delete_if_exists!
     end
 
   end

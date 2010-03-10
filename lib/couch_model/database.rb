@@ -28,19 +28,16 @@ module CouchModel
       Transport.request :put, url, :expected_status_code => 201
     end
 
+    def create_if_missing!
+      create! unless exists?
+    end
+
     def delete!
       Transport.request :delete, url, :expected_status_code => 200
     end
 
-    def setup!(options = { })
-      delete_if_exists = options[:delete_if_exists] || false
-
-      if delete_if_exists
-        delete! if exists?
-        create!
-      else
-        create! unless exists?
-      end
+    def delete_if_exists!
+      delete! if exists?
     end
 
     def informations

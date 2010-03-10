@@ -41,10 +41,18 @@ describe SetupTestModel do
       database.object_id.should == SetupTestModel.database.object_id
     end
 
-    it "should setup the database on initialization if requested" do
-      @options[:setup_on_initialization] = true
+    it "should delete the database if requested" do
+      @options[:delete_if_exists] = true
       database = SetupTestModel.database
-      database.should_receive(:setup!).with(@options)
+      database.should_receive(:delete_if_exists!)
+      CouchModel::Database.stub!(:new).and_return(database)
+      do_setup
+    end
+
+    it "should create the database if requested" do
+      @options[:create_if_missing] = true
+      database = SetupTestModel.database
+      database.should_receive(:create_if_missing!)
       CouchModel::Database.stub!(:new).and_return(database)
       do_setup
     end
@@ -70,8 +78,8 @@ describe SetupTestModel do
       SetupTestModel.test_view.should be_instance_of(CouchModel::Collection)
     end
 
-    it "should push the design on initialization if requested" do
-      @options[:setup_on_initialization] = true
+    it "should push the design if requested" do
+      @options[:push_design] = true
       @design.should_receive(:push)
       do_setup
     end

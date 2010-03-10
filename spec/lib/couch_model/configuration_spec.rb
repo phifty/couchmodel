@@ -42,38 +42,25 @@ describe CouchModel::Configuration do
 
     before :each do
       CouchModel::Configuration.class_variable_set :@@databases, [ ]
+      @database = CouchModel::Database.new :name => "test"
+      CouchModel::Configuration.register_database @database
+
+      @database.stub!(:delete_if_exists!)
+      @database.stub!(:create_if_missing!)
     end
 
     def do_setup
-      CouchModel::Configuration.setup_databases
-    end
-    
-    describe "for an existing database" do
-
-      before :each do
-        @database = CouchModel::Database.new :name => "test"
-        CouchModel::Configuration.register_database @database
-      end
-
-      it "should not create the database" do
-        @database.should_not_receive(:create!)
-        do_setup
-      end
-
+      CouchModel::Configuration.setup_databases :delete_if_exists => true, :create_if_missing => true
     end
 
-    describe "for a not-existing database" do
+    it "should call delete_if_exists!" do
+      @database.should_receive(:delete_if_exists!)
+      do_setup
+    end
 
-      before :each do
-        @database = CouchModel::Database.new :name => "new_database"
-        CouchModel::Configuration.register_database @database
-      end
-
-      it "should create the database" do
-        @database.should_receive(:create!)
-        do_setup
-      end      
-
+    it "should call create_if_missing!" do
+      @database.should_receive(:create_if_missing!)
+      do_setup
     end
 
   end

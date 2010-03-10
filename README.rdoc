@@ -29,9 +29,10 @@ To define a model, it's necessary to create a subclass of <tt>CouchModel::Base</
 
   class User < CouchModel::Base
 
-    setup_database :url                     => "http://localhost:5984/test",
-                   :setup_on_initialization => true,
-                   :delete_if_exists        => false
+    setup_database :url               => "http://localhost:5984/test",
+                   :create_if_missing => true,
+                   :delete_if_exists  => false,
+                   :push_design       => true
 
     key_accessor :name
     key_accessor :email
@@ -40,10 +41,12 @@ To define a model, it's necessary to create a subclass of <tt>CouchModel::Base</
 
 The <tt>setup_database</tt> method defines a database for the model. The +url+ option is required and specifies the url
 of the database in the scheme <em>http://[host]:[port]/[database_name]</em>. If the option
-<tt>setup_on_initialization</tt> is set to true, CouchModel will try to create the database when the model is
-initialized. If the option <tt>delete_if_exists</tt> is specified, the database will be deleted and re-created. If the
-option <tt>setup_on_initialization</tt> is not specified or false, the database setup be done manually by calling
-<tt>CouchModel::Configuration.setup_databases</tt> and <tt>CouchModel::Configuration.setup_designs</tt>.
+<tt>create_if_missing</tt> is set to true, CouchModel will try to create the database when the model is
+initialized. If the option <tt>delete_if_exists</tt> is specified, the database will be deleted and re-created. The
+option <tt>push_design</tt> will make CouchModel upload the design document assigned to the model during it's
+initialization process. If the option <tt>create_if_missing</tt> is not specified or false, the database setup be done
+manually by calling <tt>CouchModel::Configuration.setup_databases</tt> and
+<tt>CouchModel::Configuration.setup_designs</tt>.
 
 The method <tt>key_accessor</tt> defined access methods to the given keys of the CouchDB document. It's also possible
 to use <tt>key_reader</tt> and <tt>key_writer</tt> here.

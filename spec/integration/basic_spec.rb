@@ -3,9 +3,16 @@ require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "lib", "c
 
 CouchModel::Configuration.design_directory = File.join File.dirname(__FILE__), "design"
 
+DATABASE = {
+  :url                => "http://localhost:5984/test",
+  :create_if_missing  => true,
+  :delete_if_exists   => true,
+  :push_design        => true
+}.freeze unless defined?(DATABASE)
+
 class User < CouchModel::Base
 
-  setup_database :url => "http://localhost:5984/test", :setup_on_initialization => true, :delete_if_exists => true
+  setup_database DATABASE
 
   key_accessor :username
   key_accessor :email
@@ -19,7 +26,7 @@ end
 
 class Membership < CouchModel::Base
 
-  setup_database :url => "http://localhost:5984/test", :setup_on_initialization => true, :delete_if_exists => true
+  setup_database DATABASE
 
   key_accessor :created_at
 

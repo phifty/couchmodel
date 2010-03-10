@@ -50,15 +50,19 @@ module CouchModel
         private
 
         def initialize_database(options)
-          url                     = options[:url] || raise(ArgumentError, "no url was given to define the database")
-          setup_on_initialization = options[:setup_on_initialization] || false
+          url               = options[:url] || raise(ArgumentError, "no url was given to define the database")
+          delete_if_exists  = options[:delete_if_exists]  || false
+          create_if_missing = options[:create_if_missing] || false
 
           uri = URI.parse url
           server = Server.new :host => uri.host, :port => uri.port
           database = Database.new :server => server, :name => uri.path.gsub("/", "")
           @database = Configuration.register_database database
 
-          @database.setup! options if setup_on_initialization && @database === database
+          if @database === database
+            @database.delete_if_exists!   if delete_if_exists
+            @database.create_if_missing!  if create_if_missing
+          end
         end
 
         def initialize_design
@@ -71,8 +75,8 @@ module CouchModel
         end
 
         def push_design(options)
-          setup_on_initialization = options[:setup_on_initialization] || false
-          @design.push if setup_on_initialization
+          push_design = options[:push_design] || false
+          @design.push if push_design
         end
 
         def find_view(name)
