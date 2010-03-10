@@ -40,7 +40,7 @@ To define a model, it's necessary to create a subclass of <tt>CouchModel::Base</
   end
 
 The <tt>setup_database</tt> method defines a database for the model. The +url+ option is required and specifies the url
-of the database in the scheme <em>http://[host]:[port]/[database_name]</em>. If the option
+of the database in the scheme <tt>http://[host]:[port]/[database_name]</tt>. If the option
 <tt>create_if_missing</tt> is set to true, CouchModel will try to create the database when the model is
 initialized. If the option <tt>delete_if_exists</tt> is specified, the database will be deleted and re-created. The
 option <tt>push_design</tt> will make CouchModel upload the design document assigned to the model during it's
@@ -58,7 +58,7 @@ Each defined model has a realted design document, that keeps all the views for t
   CouchModel::Configuration.design_directory = "[directory]"
 
 a directory is specfied that keeps all the design document. CouchModel will watch out for a file with the name
-<em>[design directory]/[model_name].design</em> and will use it as the related design document. If no such file exists,
+<tt>[design directory]/[model_name].design</tt> and will use it as the related design document. If no such file exists,
 a design document will be created (but not saved to the file). The design ducument can be asscessed via
 <tt>Model.design</tt>.
 
@@ -112,7 +112,7 @@ In this example, the <tt>belongs_to</tt> adds a <tt>key_accessor</tt> named <tt>
 generates getters and setters for the session object itself (<tt>session</tt> and <tt>session=</tt>).
 
 The <tt>has_many</tt> acts as a wrapper for the specified view. The previously defined view
-<em>by_user_id_and_created_at</em> emits membership-documents by thier <tt>user_id</tt> and the <tt>created_at</tt>
+<tt>by_user_id_and_created_at</tt> emits membership-documents by thier <tt>user_id</tt> and the <tt>created_at</tt>
 date. The given query option specifes a method that returns a query hash for the specifed view. The arguments for this
 method can be passed membership association method.
 
