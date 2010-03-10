@@ -105,7 +105,7 @@ module CouchModel
     end
 
     def update
-      response = Transport.request :put, self.url, :json => self.attributes, :expected_status_code => 200
+      response = Transport.request :put, self.url, :json => self.attributes, :expected_status_code => 201
       self.rev = response["rev"]
       true
     rescue Transport::UnexpectedStatusCodeError

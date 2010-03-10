@@ -82,7 +82,7 @@
   :http_method: "put"
   :url:         "http://localhost:5984/test/test_model_1"
   :response:
-    :code:      "200"
+    :code:      "201"
     :json:
       "ok":   true
       "id":   "test_model_1"

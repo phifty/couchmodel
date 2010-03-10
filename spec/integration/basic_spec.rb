@@ -64,6 +64,10 @@ describe "integration" do
         @user.should_not be_new
       end
 
+      it "should return true" do
+        @user.save.should be_true
+      end
+
     end
 
   end
@@ -81,6 +85,23 @@ describe "integration" do
       @membership_two = Membership.new :created_at => "yesterday"
       @membership_two.user = @user_two
       @membership_two.save
+    end
+
+    describe "save" do
+
+      before :each do
+        @user_one.username = "new username"
+      end
+
+      it "should update the model" do
+        @user_one.save
+        @user_one.username.should == "new username"
+      end
+
+      it "should return true" do
+        @user_one.save.should be_true
+      end
+
     end
 
     describe "all" do
