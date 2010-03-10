@@ -40,7 +40,7 @@ To define a model, it's necessary to create a subclass of <tt>CouchModel::Base</
   end
 
 The <tt>setup_database</tt> method defines a database for the model. The +url+ option is required and specifies the url
-of the database in the scheme <tt>http\://[host]\:[port]/[database_name]</tt>. If the option
+of the database in the scheme <tt>[scheme]://[host]:[port]/[database_name]</tt>. If the option
 <tt>create_if_missing</tt> is set to true, CouchModel will try to create the database when the model is
 initialized. If the option <tt>delete_if_exists</tt> is specified, the database will be deleted and re-created. The
 option <tt>push_design</tt> will make CouchModel upload the design document assigned to the model during it's
