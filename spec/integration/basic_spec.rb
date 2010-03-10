@@ -104,6 +104,19 @@ describe "integration" do
 
     end
 
+    describe "destroy" do
+
+      it "should return true" do
+        @user_one.destroy.should be_true
+      end
+
+      it "should set the model to new" do
+        @user_one.destroy
+        @user_one.should be_new
+      end
+
+    end
+
     describe "all" do
 
       it "should include the saved user" do

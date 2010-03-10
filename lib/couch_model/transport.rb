@@ -49,7 +49,7 @@ module CouchModel
         json        = options[:json]
 
         case request_class.to_s
-          when "Net::HTTP::Get"
+          when "Net::HTTP::Get", "Net::HTTP::Delete"
             request_class.new uri.path +
               (parameters.empty? ? "" : "?" + parameters.collect{ |key, value| "#{key}=#{URI.escape(value.to_s)}" }.reverse.join("&"))
           when "Net::HTTP::Post", "Net::HTTP::Put"
