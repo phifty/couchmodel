@@ -35,10 +35,11 @@ module CouchModel
 
     alias destroyed? new?
 
-    alias save_without_dirty save
+    alias save_without_active_model save
 
     def save
-      result = save_without_dirty
+      return false unless valid?
+      result = save_without_active_model
       discard_changes!
       result
     end

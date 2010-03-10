@@ -139,6 +139,11 @@ describe ActiveTestModel do
       @model.save
     end
 
+    it "should not save on failing validations" do
+      @model.name = ""
+      @model.save.should be_false
+    end
+
     describe "on a new model" do
 
       before :each do
