@@ -59,24 +59,26 @@ module CouchModel
       true
     end
 
-    def evaluate(response)
-      @total_count = response["total_rows"]
-      @entries = response["rows"].select do |row|
-        row["doc"].has_key?(Configuration::CLASS_KEY) && Object.const_defined?(row["doc"][Configuration::CLASS_KEY])
-      end.map do |row|
-        model_class = Object.const_get row["doc"][Configuration::CLASS_KEY]
-        model = model_class.new
-        model.instance_variable_set :@attributes, row["doc"]
-        model
-      end
-    end
-
     def request_parameters
       parameters = { "include_docs" => "true" }
       REQUEST_PARAMETER_KEYS.each do |key|
         parameters[ key.to_s ] = @options[key].is_a?(Array) ? JSON.dump(@options[key]) : @options[key].to_s if @options[key]
       end
       parameters
+    end
+    
+    def evaluate(response)
+      @total_count = response["total_rows"]
+      @entries = response["rows"].select do |row|
+        row["doc"].has_key?(Configuration::CLASS_KEY) && Object.const_defined?(row["doc"][Configuration::CLASS_KEY])
+      end.map &method(:map_row_to_model)
+    end
+
+    def map_row_to_model(row)
+      model_class = Object.const_get row["doc"][Configuration::CLASS_KEY]
+      model = model_class.new
+      model.instance_variable_set :@attributes, row["doc"]
+      model      
     end
 
   end
