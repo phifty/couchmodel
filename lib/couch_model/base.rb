@@ -12,13 +12,16 @@ require 'uri'
 
 module CouchModel
 
+  # Base is the main super class of all models that should be stored in CouchDB.
+  # See the README file for more informations.
   class Base
     include CouchModel::Base::Setup
     include CouchModel::Base::Accessor
     include CouchModel::Base::Finder
     include CouchModel::Base::Association
 
-    class Error < StandardError; end
+    # The NotFoundError will be raised if an operation is tried on a document that
+    # dosen't exists.
     class NotFoundError < StandardError; end
 
     attr_reader :attributes
@@ -61,9 +64,9 @@ module CouchModel
       [ "_id", "_rev", Configuration::CLASS_KEY ].each { |key| response.delete key }
       self.attributes = response
       true
-    rescue Transport::UnexpectedStatusCodeError => e
-      raise NotFoundError if e.status_code == 404
-      raise e
+    rescue Transport::UnexpectedStatusCodeError => exception
+      raise NotFoundError if exception.status_code == 404
+      raise exception
     end
 
     def save
@@ -75,9 +78,9 @@ module CouchModel
       Transport.request :delete, self.url, :parameters => { "rev" => self.rev }, :expected_status_code => 200
       self.rev = nil
       true
-    rescue Transport::UnexpectedStatusCodeError => e
-      raise NotFoundError if e.status_code == 404
-      raise e
+    rescue Transport::UnexpectedStatusCodeError => exception
+      raise NotFoundError if exception.status_code == 404
+      raise exception
     end
 
     def url

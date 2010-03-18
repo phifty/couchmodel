@@ -1,7 +1,7 @@
 
 module CouchModel
 
-  class Base
+  class Base # :nodoc:
 
     module Finder
 
