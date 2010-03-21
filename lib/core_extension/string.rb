@@ -1,5 +1,5 @@
 
-class String
+class String # :nodoc:
 
   # This method converts a CamelCaseString into an underscore_string.
   def underscore
@@ -8,11 +8,15 @@ class String
 
   # This method converts an underscore_string into a CamelCaseString.
   def camelize
-    self.gsub(/\/(.?)/) do
-      "::#{$1.upcase}"
-    end.gsub(/(?:^|_)(.)/) do
-      $1.upcase
-    end
+    self.camelize_path.camelize_name
+  end
+
+  def camelize_path
+    self.gsub(/\/(.?)/) { "::#{$1.upcase}" }
+  end
+
+  def camelize_name
+    self.gsub(/(?:^|_)(.)/) { $1.upcase }
   end
 
 end

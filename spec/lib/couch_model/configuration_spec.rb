@@ -41,7 +41,7 @@ describe CouchModel::Configuration do
   describe "setup_databases" do
 
     before :each do
-      CouchModel::Configuration.class_variable_set :@@databases, [ ]
+      CouchModel::Configuration.instance_variable_set :@databases, [ ]
       @database = CouchModel::Database.new :name => "test"
       CouchModel::Configuration.register_database @database
 
@@ -83,7 +83,7 @@ describe CouchModel::Configuration do
   describe "setup_designs" do
 
     before :each do
-      CouchModel::Configuration.class_variable_set :@@designs, [ ]
+      CouchModel::Configuration.instance_variable_set :@designs, [ ]
 
       @database = CouchModel::Database.new :name => "test"
       @design = CouchModel::Design.new @database, :id => "test_design"

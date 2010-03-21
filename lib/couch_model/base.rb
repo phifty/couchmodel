@@ -58,15 +58,10 @@ module CouchModel
     end
 
     def load
-      response = Transport.request :get, url, :expected_status_code => 200
-
-      self.rev = response["_rev"]
-      [ "_id", "_rev", Configuration::CLASS_KEY ].each { |key| response.delete key }
-      self.attributes = response
+      load_response Transport.request(:get, url, :expected_status_code => 200)
       true
-    rescue Transport::UnexpectedStatusCodeError => exception
-      raise NotFoundError if exception.status_code == 404
-      raise exception
+    rescue Transport::UnexpectedStatusCodeError => error
+      upgrade_unexpected_status_error error
     end
 
     def save
@@ -76,11 +71,10 @@ module CouchModel
     def destroy
       return false if new?
       Transport.request :delete, self.url, :parameters => { "rev" => self.rev }, :expected_status_code => 200
-      self.rev = nil
+      clear_rev
       true
-    rescue Transport::UnexpectedStatusCodeError => exception
-      raise NotFoundError if exception.status_code == 404
-      raise exception
+    rescue Transport::UnexpectedStatusCodeError => error
+      upgrade_unexpected_status_error error
     end
 
     def url
@@ -98,8 +92,13 @@ module CouchModel
       @attributes["_rev"] = value      
     end
 
+    def load_response(response)
+      self.rev = response["_rev"]
+      self.attributes = response
+    end
+
     def create
-      response = Transport.request :post, self.database.url, :json => self.attributes, :expected_status_code => 201
+      response = Transport.request :post, self.database.url, :body => self.attributes, :expected_status_code => 201
       self.id  = response["id"]
       self.rev = response["rev"]
       true
@@ -108,11 +107,20 @@ module CouchModel
     end
 
     def update
-      response = Transport.request :put, self.url, :json => self.attributes, :expected_status_code => 201
+      response = Transport.request :put, self.url, :body => self.attributes, :expected_status_code => 201
       self.rev = response["rev"]
       true
     rescue Transport::UnexpectedStatusCodeError
       false
+    end
+
+    def clear_rev
+      self.rev = nil
+    end
+
+    def upgrade_unexpected_status_error(error)
+      raise NotFoundError if error.status_code == 404
+      raise error
     end
 
   end

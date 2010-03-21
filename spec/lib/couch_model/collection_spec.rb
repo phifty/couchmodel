@@ -41,7 +41,7 @@ describe CouchModel::Collection do
 
       it "should perform a meta fetch (with a limit of zero)" do
         CouchModel::Transport.should_receive(:request).with(anything, anything,
-          hash_including(:parameters => { "include_docs" => "true", "limit" => "0" }))
+          hash_including(:parameters => { "include_docs" => "true", "limit" => 0 }))
         @collection.total_count
       end
 
@@ -92,7 +92,7 @@ describe CouchModel::Collection do
 
     it "should convert options to request parameters" do
       parameters = @collection.send :request_parameters
-      parameters.should == { "include_docs" => "true", "limit" => "1" }
+      parameters.should == { "include_docs" => "true", "limit" => 1 }
     end
 
   end

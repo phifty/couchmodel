@@ -41,4 +41,21 @@ describe CouchModel::Transport do
 
   end
 
+  describe "serialize_parameters" do
+
+    before :each do
+      @parameters = { :test => [ :test, 1, 2, 3 ], :another_test => :test }
+    end
+
+    it "should return an empty string on empty parameter hash" do
+      CouchModel::Transport.send(:serialize_parameters, { }).should == ""
+    end
+    
+    it "should serialize the given parameters" do
+      CouchModel::Transport.send(:serialize_parameters, @parameters).should ==
+        "?another_test=test&test=[%22test%22,1,2,3]"
+    end
+
+  end
+
 end

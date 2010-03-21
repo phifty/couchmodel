@@ -2,9 +2,9 @@ require File.join(File.dirname(__FILE__), "transport")
 
 module CouchModel
 
+  # The Server class provides methods to retrieve informations and statistics
+  # of a CouchDB server.
   class Server
-
-    class Error < StandardError; end
 
     attr_reader :host
     attr_reader :port

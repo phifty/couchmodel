@@ -1,7 +1,8 @@
 
 module CouchModel
 
-  class Base # :nodoc:
+  # This should extend the Base class to provide association methods.
+  class Base
 
     module Association
 
@@ -33,15 +34,15 @@ module CouchModel
 
         private
 
-        def define_belongs_to_reader(name, class_name, key)
-          define_method :"#{name}" do
+        def define_belongs_to_reader(reader_name, class_name, key)
+          define_method :"#{reader_name}" do
             klass = Object.const_get class_name
             klass.find self.send(key)
           end          
         end
 
-        def define_belongs_to_writer(name, class_name, key)
-          define_method :"#{name}=" do |value|
+        def define_belongs_to_writer(writer_name, class_name, key)
+          define_method :"#{writer_name}=" do |value|
             klass = Object.const_get class_name
             if value
               raise ArgumentError, "only objects of class #{klass} are accepted" unless value.is_a?(klass)
@@ -52,20 +53,19 @@ module CouchModel
           end
         end
 
-        def define_has_many_query(name, query)
-          define_method :"#{name}_query", &query if query.is_a?(Proc)
+        def define_has_many_query(query_name, query)
+          define_method :"#{query_name}_query", &query if query.is_a?(Proc)
         end
 
-        def define_has_many_reader(name, class_name, view_name)
-          define_method :"#{name}" do |*arguments|
-            klass = Object.const_get class_name
-            query = if self.respond_to?(:"#{name}_query")
-              arguments << nil while arguments.length < self.method(:"#{name}_query").arity
-              self.send :"#{name}_query", *arguments
+        def define_has_many_reader(reader_name, class_name, view_name)
+          define_method :"#{reader_name}" do |*arguments|
+            query = if self.respond_to?(:"#{reader_name}_query")
+              arguments << nil while arguments.length < self.method(:"#{reader_name}_query").arity
+              self.send :"#{reader_name}_query", *arguments
             else
               { :key => "\"#{self.id}\"" }
             end
-            klass.send :"#{view_name}", query
+            Object.const_get(class_name).send :"#{view_name}", query
           end
         end
 

@@ -1,7 +1,8 @@
 
 module CouchModel
 
-  class Base # :nodoc:
+  # This should extend the Base class to provide setup methods.
+  class Base
 
     module Setup
 

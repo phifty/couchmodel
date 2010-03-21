@@ -44,10 +44,6 @@ describe CouchModel::Design do
 
     context "file does exists" do
 
-      before :each do
-        File.stub!(:exists?).and_return(true)
-      end
-
       it "should set the attributes" do
         do_load
         @design.id.should == "test_design"
@@ -64,7 +60,7 @@ describe CouchModel::Design do
     context "file doesn't exists" do
 
       before :each do
-        File.stub!(:exists?).and_return(false)
+        @design.stub!(:filename).and_return("invalid")
       end
 
       it "should return false" do

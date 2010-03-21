@@ -6,6 +6,7 @@ require 'yaml'
 
 module CouchModel
 
+  # The Design class acts as a wrapper for CouchDB design documents.
   class Design
 
     attr_reader   :database
@@ -22,9 +23,9 @@ module CouchModel
       @views        = [ ]
 
       load_file
-      self.id       = attributes[:id]       if attributes[:id]
-      self.language = attributes[:language] if attributes[:language]
-      self.views    = attributes[:views]    if attributes[:views]
+      self.id       = attributes[:id]       if attributes.has_key?(:id)
+      self.language = attributes[:language] if attributes.has_key?(:language)
+      self.views    = attributes[:views]    if attributes.has_key?(:views)
     end
 
     def filename
@@ -32,12 +33,10 @@ module CouchModel
     end
 
     def load_file
-      return false unless File.exists?(filename)
-      attributes = YAML::load_file filename
-      self.id       = attributes[:id]
-      self.language = attributes[:language]
-      self.views    = attributes[:views]
+      self.id, self.language, self.views = YAML::load_file(self.filename).values_at(:id, :language, :views)
       true
+    rescue Errno::ENOENT
+      false
     end
 
     def views=(view_hash)
@@ -54,12 +53,13 @@ module CouchModel
     end
 
     def to_hash
+      rev = self.rev
       hash = {
         "_id"       => "_design/#{self.id}",
         "language"  => self.language,
         "views"     => { }
       }
-      hash.merge! "_rev" => self.rev if self.rev
+      hash.merge! "_rev" => rev if rev
       @views.each { |view| hash["views"].merge! view.to_hash }
       hash
     end
@@ -72,10 +72,10 @@ module CouchModel
     end
 
     def push
-      response = Transport.request :get, self.url
-      self.rev = response["_rev"] if response["_rev"]
+      url = self.url
+      evaluate Transport.request(:get, url)
 
-      Transport.request :put, self.url, :json => self.to_hash, :expected_status_code => 201
+      Transport.request :put, url, :body => self.to_hash, :expected_status_code => 201
       true
     end
 
@@ -86,6 +86,10 @@ module CouchModel
     private
 
     attr_writer :rev
+
+    def evaluate(response)
+      self.rev = response["_rev"] if response.has_key?("_rev")
+    end
 
   end
 

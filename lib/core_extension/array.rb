@@ -1,5 +1,5 @@
 
-class Array
+class Array # :nodoc:
 
   # This wrap method is taken from ActiveSupport and simply
   # wraps an object into an array.

@@ -3,7 +3,7 @@
   :url:         "http://localhost:5984/"
   :response:
     :code:      "200"
-    :json:
+    :body:
       "couchdb":  "Welcome"
       "version":  "0.10.0"
 -
@@ -11,7 +11,7 @@
   :url:         "http://localhost:5984/_stats"
   :response:
     :code:      "200"
-    :json:
+    :body:
       "httpd_status_codes":     "..."
       "httpd_request_methods":  "..."
 -
@@ -19,7 +19,7 @@
   :url:         "http://localhost:5984/_all_dbs"
   :response:
     :code:      "200"
-    :json:      [ "development", "test" ]
+    :body:      [ "development", "test" ]
 -
   :http_method: "get"
   :url:         "http://localhost:5984/_uuids"
@@ -27,14 +27,14 @@
     :count:     3
   :response:
     :code:      "200"
-    :json:
+    :body:
       "uuids":  [ "uuid_1", "uuid_2", "uuid_3" ]
 -
   :http_method: "get"
   :url:         "http://localhost:5984/test"
   :response:
     :code:      "200"
-    :json:
+    :body:
       "db_name":    "test"
       "doc_count":  "0"
 -
@@ -42,13 +42,13 @@
   :url:         "http://localhost:5984/new_database"
   :response:
     :code:      "404"
-    :json:
+    :body:
 -
   :http_method: "get"
   :url:         "http://localhost:5984/test/test_model_1"
   :response:
     :code:      "200"
-    :json:
+    :body:
       "_id":          "test_model_1"
       "_rev":         "0"
       "model_class":  "BaseTestModel"
@@ -59,7 +59,7 @@
   :url:         "http://localhost:5984/test/test_model_2"
   :response:
     :code:      "200"
-    :json:
+    :body:
       "_id":          "test_model_2"
       "_rev":         "0"
       "model_class":  "BaseTestModel"
@@ -74,7 +74,7 @@
   :url:         "http://localhost:5984/test"
   :response:
     :code:      "201"
-    :json:
+    :body:
       "ok":   true
       "id":   "test_model_2"
       "rev":  "0"
@@ -83,7 +83,7 @@
   :url:         "http://localhost:5984/test/test_model_1"
   :response:
     :code:      "201"
-    :json:
+    :body:
       "ok":   true
       "id":   "test_model_1"
       "rev":  "1"
@@ -94,7 +94,7 @@
     "rev":  "0"
   :response:
     :code:      "200"
-    :json:
+    :body:
       "ok":   true
       "id":   "test_model_1"
       "rev":  "1"
@@ -103,7 +103,7 @@
   :url:         "http://localhost:5984/test/_design/test_design"
   :response:
     :code:      "200"
-    :json:
+    :body:
       "_id":      "_design/test_design"
       "_rev":     "0"
       "language": "javascript"
@@ -116,7 +116,7 @@
   :url:         "http://localhost:5984/test/_design/test_design"
   :response:
     :code:      "201"
-    :json:
+    :body:
       "ok":   true
       "id":   "_design/test_design"
       "rev":  "1"
@@ -125,10 +125,10 @@
   :url:         "http://localhost:5984/test/_all_docs"
   :parameters:
     "include_docs": "true"
-    "limit":        "1"
+    "limit":        1
   :response:
     :code:      "200"
-    :json:
+    :body:
       "total_rows":   1
       "offset":       0
       "rows":
@@ -147,10 +147,10 @@
   :url:         "http://localhost:5984/test/_all_docs"
   :parameters:
     "include_docs": "true"
-    "limit":        "0"
+    "limit":        0
   :response:
     :code:      "200"
-    :json:
+    :body:
       "total_rows":   1
       "offset":       0
       "rows":         [ ]
@@ -159,11 +159,11 @@
   :url:         "http://localhost:5984/test/_design/association_test_model_one/_view/by_related_id_and_name"
   :parameters:
     "include_docs": "true"
-    "startkey":     "[\"test_model_2\",null]"
-    "endkey":       "[\"test_model_2\",{}]"
+    "startkey":     [ "test_model_2", null ]
+    "endkey":       [ "test_model_2", { } ]
   :response:
     :code:      "200"
-    :json:
+    :body:
       "total_rows":   1
       "offset":       0
       "rows":
@@ -182,11 +182,11 @@
   :url:         "http://localhost:5984/test/_design/association_test_model_one/_view/by_related_id_and_name"
   :parameters:
     "include_docs": "true"
-    "startkey":     "[\"test_model_2\",\"phil\"]"
-    "endkey":       "[\"test_model_2\",\"phil\"]"
+    "startkey":     [ "test_model_2", "phil" ]
+    "endkey":       [ "test_model_2", "phil" ]
   :response:
     :code:      "200"
-    :json:
+    :body:
       "total_rows":   1
       "offset":       0
       "rows":

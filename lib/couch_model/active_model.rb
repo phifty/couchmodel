@@ -5,6 +5,7 @@ require 'active_model'
 
 module CouchModel
 
+  # Extension of class Base to implement the ActiveModel interface.
   class Base
     extend ::ActiveModel::Naming
     extend ::ActiveModel::Callbacks
@@ -21,7 +22,7 @@ module CouchModel
 
     CALLBACKS.each do |method_name|
 
-      alias :"#{method_name}_without_callbacks" :"#{method_name}"
+      alias_method :"#{method_name}_without_callbacks", :"#{method_name}"
 
       define_method :"#{method_name}" do |*arguments|
         send :"_run_#{method_name}_callbacks" do
@@ -60,12 +61,7 @@ module CouchModel
         redefine_attribute_methods
 
         key_accessor_without_dirty key
-
-        alias_method :"#{key}_without_dirty=", :"#{key}="
-        define_method :"#{key}=" do |value|
-          send :"#{key}_will_change!"
-          send :"#{key}_without_dirty=", value
-        end
+        redefine_key_writer key
       end
 
       private
@@ -78,6 +74,14 @@ module CouchModel
       def redefine_attribute_methods
         undefine_attribute_methods
         define_attribute_methods @keys
+      end
+
+      def redefine_key_writer(key)
+        alias_method :"#{key}_without_dirty=", :"#{key}="
+        define_method :"#{key}=" do |value|
+          send :"#{key}_will_change!"
+          send :"#{key}_without_dirty=", value
+        end        
       end
 
     end

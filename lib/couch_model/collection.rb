@@ -1,9 +1,11 @@
 require File.join(File.dirname(__FILE__), "configuration")
 require File.join(File.dirname(__FILE__), "transport")
-require 'json'
 
 module CouchModel
 
+  # Collection is a proxy class for the resultset of a CouchDB view. It provides
+  # all read-only methods of an array. The loading of content is lazy and
+  # will be triggerd on the first request.
   class Collection
 
     REQUEST_PARAMETER_KEYS = [
@@ -52,7 +54,7 @@ module CouchModel
 
       evaluate Transport.request(
         :get, url,
-        :parameters            => request_parameters.merge(meta ? { "limit" => "0" } : { }),
+        :parameters            => request_parameters.merge(meta ? { "limit" => 0 } : { }),
         :expected_status_code  => 200
       )
       
@@ -62,23 +64,33 @@ module CouchModel
     def request_parameters
       parameters = { "include_docs" => "true" }
       REQUEST_PARAMETER_KEYS.each do |key|
-        parameters[ key.to_s ] = @options[key].is_a?(Array) ? JSON.dump(@options[key]) : @options[key].to_s if @options[key]
+        parameters[ key.to_s ] = @options[key] if @options.has_key?(key)
       end
       parameters
     end
-    
+
     def evaluate(response)
       @total_count = response["total_rows"]
-      @entries = response["rows"].select do |row|
-        row["doc"].has_key?(Configuration::CLASS_KEY) && Object.const_defined?(row["doc"][Configuration::CLASS_KEY])
-      end.map &method(:map_row_to_model)
+      @entries = response["rows"].map do |row|
+        self.class.map_document_to_model row["doc"]
+      end.compact
     end
 
-    def map_row_to_model(row)
-      model_class = Object.const_get row["doc"][Configuration::CLASS_KEY]
+    def self.map_document_to_model(document)
+      return nil unless document.has_key?(Configuration::CLASS_KEY)
+      model_class_name = document[Configuration::CLASS_KEY]
+      if Object.const_defined?(model_class_name)
+        instanciate_model model_class_name, document
+      else
+        nil
+      end
+    end
+
+    def self.instanciate_model(model_class_name, document)
+      model_class = Object.const_get model_class_name
       model = model_class.new
-      model.instance_variable_set :@attributes, row["doc"]
-      model      
+      model.instance_variable_set :@attributes, document
+      model
     end
 
   end

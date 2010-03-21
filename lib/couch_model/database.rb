@@ -4,9 +4,9 @@ require File.join(File.dirname(__FILE__), "collection")
 
 module CouchModel
 
+  # The Database class provides methods create, delete and retrieve informations
+  # of a CouchDB database.
   class Database
-
-    class Error < StandardError; end
 
     attr_reader :server
     attr_reader :name
