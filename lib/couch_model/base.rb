@@ -29,6 +29,10 @@ module CouchModel
     def initialize(attributes = { })
       @attributes = { Configuration::CLASS_KEY => self.class.to_s }
       self.attributes = attributes
+
+      self.class.defaults.each do |key, value|
+        @attributes[key] = value unless @attributes.has_key?(key)
+      end      
     end
 
     def attributes=(attributes)
@@ -124,6 +128,15 @@ module CouchModel
       raise NotFoundError if error.status_code == 404
       raise error
     end
+
+    def self.set_default(key, value)
+      @defaults ||= { }
+      @defaults[key.to_s] = value
+    end
+
+    def self.defaults
+      @defaults || { }
+    end    
 
     def self.create(*arguments)
       model = new *arguments

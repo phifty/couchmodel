@@ -14,21 +14,23 @@ module CouchModel
 
       module ClassMethods
 
-        def key_reader(key)
+        def key_reader(key, options = { })
+          set_default key, options[:default] if options.has_key?(:default)
           define_method :"#{key}" do
             @attributes[key.to_s]
           end
         end
 
-        def key_writer(key)
+        def key_writer(key, options = { })
+          set_default key, options[:default] if options.has_key?(:default)
           define_method :"#{key}=" do |value|
             @attributes[key.to_s] = value
           end
         end
 
-        def key_accessor(key)
-          key_reader key
-          key_writer key
+        def key_accessor(key, options = { })
+          key_reader key, options
+          key_writer key, options
         end
 
       end

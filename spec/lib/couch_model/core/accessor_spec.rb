@@ -16,7 +16,7 @@ describe AccessorTestModel do
   describe "key_reader" do
 
     before :each do
-      AccessorTestModel.key_reader :test
+      AccessorTestModel.key_reader :test, :default => "test default"
       @model = AccessorTestModel.new
     end
 
@@ -24,12 +24,16 @@ describe AccessorTestModel do
       @model.should respond_to(:test)
     end
 
+    it "should set a default value" do
+      @model.test.should == "test default"
+    end
+
   end
 
   describe "key_writer" do
 
     before :each do
-      AccessorTestModel.key_writer :test
+      AccessorTestModel.key_writer :test, :default => "test default"
       @model = AccessorTestModel.new
     end
 
@@ -37,12 +41,16 @@ describe AccessorTestModel do
       @model.should respond_to(:test=)
     end
 
+    it "should set a default value" do
+      @model.test.should == "test default"
+    end
+
   end
 
   describe "key_accessor" do
 
     before :each do
-      AccessorTestModel.key_accessor :test
+      AccessorTestModel.key_accessor(:test, :default => "test default")
       @model = AccessorTestModel.new
     end
 

@@ -69,11 +69,11 @@ module CouchModel
 
       alias key_accessor_without_dirty key_accessor
 
-      def key_accessor(key)
+      def key_accessor(key, options = { })
         add_key key
         redefine_attribute_methods
 
-        key_accessor_without_dirty key
+        key_accessor_without_dirty key, options
         redefine_key_writer key
       end
 

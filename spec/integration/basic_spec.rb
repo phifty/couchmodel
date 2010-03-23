@@ -15,7 +15,7 @@ class User < CouchModel::Base
   setup_database DATABASE
 
   key_accessor :username
-  key_accessor :email
+  key_accessor :email, :default => "no email"
 
   has_many :memberships,
            :class_name  => "Membership",
@@ -41,7 +41,7 @@ describe "integration" do
   context "on new models" do
 
     before :each do
-      @user = User.new :username => "user", :email => "email"
+      @user = User.new :username => "user"
     end
 
     describe "setup" do
@@ -82,8 +82,8 @@ describe "integration" do
   context "on saved models" do
 
     before :each do
-      @user_one = User.create :username => "user one", :email => "email one"
-      @user_two = User.create :username => "user two", :email => "email two"
+      @user_one = User.create :username => "user one"
+      @user_two = User.create :username => "user two"
       @membership_one = Membership.create :created_at => "yesterday", :user => @user_one
       @membership_two = Membership.create :created_at => "yesterday", :user => @user_two
     end
