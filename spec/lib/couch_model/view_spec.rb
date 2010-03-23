@@ -57,7 +57,7 @@ describe CouchModel::View do
 
     end
 
-    context "using explizit functions" do
+    context "using explicit functions" do
 
       before :each do
         @options.merge! :map    => "map function",
@@ -89,7 +89,7 @@ describe CouchModel::View do
     end
 
     it "should pass the options to the collection" do
-      @view.collection(:test => "test").options.should == { :test => "test" }
+      @view.collection(:test => "test").options.should == { :test => "test", :returns => :models }
     end
 
   end

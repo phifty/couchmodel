@@ -1,2 +1,14 @@
 :id:        "user"
 :language:  "javascript"
+:views:
+  "user_count":
+    :map:
+      function(document) {
+        if (document['model_class'] == 'User') {
+          emit('user_count', 1);
+        }
+      }
+    :reduce:
+      function(keys, values, rereduce) {
+        return sum(values);
+      }

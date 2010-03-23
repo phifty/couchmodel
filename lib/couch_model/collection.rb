@@ -1,5 +1,5 @@
-require File.join(File.dirname(__FILE__), "configuration")
 require File.join(File.dirname(__FILE__), "transport")
+require File.join(File.dirname(__FILE__), "row")
 
 module CouchModel
 
@@ -27,10 +27,11 @@ module CouchModel
 
     def initialize(url, options = { })
       @url, @options = url, options
+      @options[:returns] ||= :models
     end
 
     def total_count
-      fetch :meta => true unless @total_count
+      fetch_meta unless @total_count
       @total_count
     end
 
@@ -49,48 +50,53 @@ module CouchModel
 
     private
 
-    def fetch(options = { })
-      meta = options[:meta] || false
-
-      evaluate Transport.request(
-        :get, url,
-        :parameters            => request_parameters.merge(meta ? { "limit" => 0 } : { }),
-        :expected_status_code  => 200
-      )
-      
+    def fetch
+      fetch_response
+      evaluate_total_count
+      evaluate_entries
       true
     end
 
+    def fetch_meta
+      fetch_meta_response
+      evaluate_total_count
+      true
+    end
+
+    def fetch_response
+      @response = Transport.request(
+        :get, url,
+        :parameters            => request_parameters,
+        :expected_status_code  => 200
+      )
+    end
+
+    def fetch_meta_response
+      @response = Transport.request(
+        :get, url,
+        :parameters            => request_parameters.merge(:limit => 0),
+        :expected_status_code  => 200
+      )
+    end
+
     def request_parameters
-      parameters = { "include_docs" => "true" }
+      parameters = @options[:returns] == :models ? { :include_docs => true } : { }
       REQUEST_PARAMETER_KEYS.each do |key|
-        parameters[ key.to_s ] = @options[key] if @options.has_key?(key)
+        parameters[ key ] = @options[key] if @options.has_key?(key)
       end
       parameters
     end
 
-    def evaluate(response)
-      @total_count = response["total_rows"]
-      @entries = response["rows"].map do |row|
-        self.class.map_document_to_model row["doc"]
-      end.compact
+    def evaluate_total_count
+      @total_count = @response["total_rows"]
     end
-
-    def self.map_document_to_model(document)
-      return nil unless document.has_key?(Configuration::CLASS_KEY)
-      model_class_name = document[Configuration::CLASS_KEY]
-      if Object.const_defined?(model_class_name)
-        instanciate_model model_class_name, document
-      else
-        nil
+    
+    def evaluate_entries
+      returns = @options[:returns]
+      @entries = @response["rows"].map do |row_hash|
+        row = CouchModel::Row.new row_hash
+        returns == :models ? row.model : row
       end
-    end
-
-    def self.instanciate_model(model_class_name, document)
-      model_class = Object.const_get model_class_name
-      model = model_class.new
-      model.instance_variable_set :@attributes, document
-      model
     end
 
   end

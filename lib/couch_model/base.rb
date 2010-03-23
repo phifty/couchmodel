@@ -70,7 +70,7 @@ module CouchModel
 
     def destroy
       return false if new?
-      Transport.request :delete, self.url, :parameters => { "rev" => self.rev }, :expected_status_code => 200
+      Transport.request :delete, self.url, :parameters => { :rev => self.rev }, :expected_status_code => 200
       clear_rev
       true
     rescue Transport::UnexpectedStatusCodeError => error

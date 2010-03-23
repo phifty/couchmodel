@@ -1,6 +1,7 @@
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "spec_helper"))
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "lib", "couch_model", "base"))
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "lib", "couch_model", "collection"))
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "..", "lib", "couch_model", "row"))
 
 CouchModel::Configuration.design_directory = File.join File.dirname(__FILE__), "design"
 
@@ -30,7 +31,7 @@ describe CouchModel::Collection do
     end
 
     it "should set the options" do
-      @collection.options.should == { :option => "test" }
+      @collection.options.should == { :option => "test", :returns => :models }
     end
 
   end
@@ -41,7 +42,7 @@ describe CouchModel::Collection do
 
       it "should perform a meta fetch (with a limit of zero)" do
         CouchModel::Transport.should_receive(:request).with(anything, anything,
-          hash_including(:parameters => { "include_docs" => "true", "limit" => 0 }))
+          hash_including(:parameters => { :include_docs => true, :limit => 0 }))
         @collection.total_count
       end
 
@@ -80,10 +81,33 @@ describe CouchModel::Collection do
       do_fetch.should be_true
     end
 
-    it "should fetch the model" do
-      do_fetch
-      @collection.first.should be_instance_of(CollectionTestModel)
-      @collection.first.name.should == "phil"
+    context "returning models" do
+
+      before :each do
+        @collection.options[:returns] = :models
+      end
+
+      it "should fetch the model" do
+        do_fetch
+        @collection.first.should be_instance_of(CollectionTestModel)
+        @collection.first.name.should == "phil"
+      end
+
+    end
+
+    context "returning rows" do
+
+      before :each do
+        @collection.options[:returns] = :rows
+      end
+
+      it "should fetch the row" do
+        do_fetch
+        @collection.first.should be_instance_of(CouchModel::Row)
+        @collection.first.model.should be_instance_of(CollectionTestModel)
+        @collection.first.model.name.should == "phil"
+      end
+
     end
 
   end
@@ -92,7 +116,7 @@ describe CouchModel::Collection do
 
     it "should convert options to request parameters" do
       parameters = @collection.send :request_parameters
-      parameters.should == { "include_docs" => "true", "limit" => 1 }
+      parameters.should == { :include_docs => true, :limit => 1 }
     end
 
   end

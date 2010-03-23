@@ -91,7 +91,7 @@
   :http_method: "delete"
   :url:         "http://localhost:5984/test/test_model_1"
   :parameters:
-    "rev":  "0"
+    :rev:  "0"
   :response:
     :code:      "200"
     :body:
@@ -124,8 +124,8 @@
   :http_method: "get"
   :url:         "http://localhost:5984/test/_all_docs"
   :parameters:
-    "include_docs": "true"
-    "limit":        1
+    :include_docs: true
+    :limit:        1
   :response:
     :code:      "200"
     :body:
@@ -146,8 +146,29 @@
   :http_method: "get"
   :url:         "http://localhost:5984/test/_all_docs"
   :parameters:
-    "include_docs": "true"
-    "limit":        0
+    :limit:        1
+  :response:
+    :code:      "200"
+    :body:
+      "total_rows":   1
+      "offset":       0
+      "rows":
+        -
+          "id":   "test_model_1"
+          "key":  "test_model_1"
+          "value":
+            "rev":  "0"
+          "doc":
+            "_id":          "test_model_1"
+            "_rev":         "0"
+            "model_class":  "CollectionTestModel"
+            "name":         "phil"
+-
+  :http_method: "get"
+  :url:         "http://localhost:5984/test/_all_docs"
+  :parameters:
+    :include_docs: true
+    :limit:        0
   :response:
     :code:      "200"
     :body:
@@ -158,9 +179,9 @@
   :http_method: "get"
   :url:         "http://localhost:5984/test/_design/association_test_model_one/_view/by_related_id_and_name"
   :parameters:
-    "include_docs": "true"
-    "startkey":     [ "test_model_2", null ]
-    "endkey":       [ "test_model_2", { } ]
+    :include_docs: true
+    :startkey:     [ "test_model_2", null ]
+    :endkey:       [ "test_model_2", { } ]
   :response:
     :code:      "200"
     :body:
@@ -181,9 +202,9 @@
   :http_method: "get"
   :url:         "http://localhost:5984/test/_design/association_test_model_one/_view/by_related_id_and_name"
   :parameters:
-    "include_docs": "true"
-    "startkey":     [ "test_model_2", "phil" ]
-    "endkey":       [ "test_model_2", "phil" ]
+    :include_docs: true
+    :startkey:     [ "test_model_2", "phil" ]
+    :endkey:       [ "test_model_2", "phil" ]
   :response:
     :code:      "200"
     :body:

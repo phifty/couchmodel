@@ -161,6 +161,18 @@ describe "integration" do
 
     end
 
+    describe "user_count" do
+
+      before :each do
+        @rows = User.user_count :returns => :rows
+      end
+
+      it "should return the user count" do
+        @rows.first.value.should >= 2
+      end
+
+    end
+
   end
 
 end
