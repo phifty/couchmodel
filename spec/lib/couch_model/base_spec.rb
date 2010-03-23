@@ -158,6 +158,14 @@ describe BaseTestModel do
     
   end
 
+  describe "all" do
+
+    it "should return a collection for the class view" do
+      BaseTestModel.all.should be_instance_of(CouchModel::Collection)
+    end
+
+  end
+
   describe "create" do
 
     it "should return a new created model" do
@@ -174,12 +182,17 @@ describe BaseTestModel do
 
   end
 
-  describe "all" do
+  describe "destroy_all" do
 
-    it "should return a collection for the class view" do
-      BaseTestModel.all.should be_instance_of(CouchModel::Collection)
+    before :each do
+      BaseTestModel.stub!(:all).and_return([ @model ])
     end
-    
+
+    it "should destroy all documents of the class" do
+      @model.should_receive(:destroy)
+      BaseTestModel.destroy_all
+    end
+
   end
 
 end

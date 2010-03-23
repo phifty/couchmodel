@@ -64,6 +64,8 @@ module CouchModel
       upgrade_unexpected_status_error error
     end
 
+    alias reload load
+
     def save
       new? ? create : update
     end
@@ -126,6 +128,12 @@ module CouchModel
     def self.create(*arguments)
       model = new *arguments
       model.save ? model : nil
+    end
+
+    def self.destroy_all
+      all.each do |model|
+        model.destroy
+      end
     end
 
   end
