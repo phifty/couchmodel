@@ -123,6 +123,14 @@ describe ActiveTestModel do
 
   end
 
+  describe "to_param" do
+
+    it "should return the model's id" do
+      @model.to_param.should == @model.id
+    end
+
+  end
+  
   describe "save" do
 
     before :each do

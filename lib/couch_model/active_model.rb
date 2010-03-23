@@ -36,6 +36,10 @@ module CouchModel
 
     alias destroyed? new?
 
+    def to_param
+      id
+    end
+
     alias save_without_active_model save
 
     def save
