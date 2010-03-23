@@ -180,6 +180,49 @@ describe ActiveTestModel do
 
   end
 
+  describe "save!" do
+
+    before :each do
+      @model.name = "test"
+    end
+
+    it "should commit the changes" do
+      @model.save!
+      @model.should_not be_changed
+    end
+
+    it "should raise InvalidModelError on failing validations" do
+      @model.name = ""
+      lambda do
+        @model.save!
+      end.should raise_error(CouchModel::Base::InvalidModelError)
+    end
+
+    it "should raise StandardError on all other errors" do
+      @model.stub!(:save).and_return(false)
+      lambda do
+        @model.save!
+      end.should raise_error(StandardError)
+    end
+
+  end
+
+  describe "create!" do
+
+    it "should create a model" do
+      model = ActiveTestModel.create! :id => "test_model_1", :name => "test"
+      model.should be_instance_of(ActiveTestModel)
+      model.should_not be_new
+    end
+
+    it "should raise InvalidModelError on failing validations" do
+      lambda do
+        ActiveTestModel.create! :id => "test_model_1", :name => ""
+      end.should raise_error(CouchModel::Base::InvalidModelError)
+    end
+
+  end
+
   describe "destroy" do
 
     def do_destroy

@@ -16,6 +16,9 @@ module CouchModel
     include ::ActiveModel::Serializers::JSON
     include ::ActiveModel::Serializers::Xml
 
+    # The InvalidModelError is raised, e. g. if the save! method is called on an invalid model.
+    class InvalidModelError < StandardError; end
+
     CALLBACKS = [ :initialize, :save, :create, :update, :destroy ].freeze unless defined?(CALLBACKS)
 
     define_model_callbacks *CALLBACKS
@@ -49,6 +52,12 @@ module CouchModel
       result
     end
 
+    def save!
+      raise InvalidModelError, "errors: #{errors.full_messages.join(' ')}" unless valid?
+      raise StandardError, "unknown error while saving model" unless save
+      true
+    end
+
     private
 
     def discard_changes!
@@ -66,6 +75,12 @@ module CouchModel
 
         key_accessor_without_dirty key
         redefine_key_writer key
+      end
+
+      def create!(*arguments)
+        model = new *arguments
+        model.save!
+        model
       end
 
       private
