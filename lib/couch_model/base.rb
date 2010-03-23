@@ -123,6 +123,11 @@ module CouchModel
       raise error
     end
 
+    def self.create(*arguments)
+      model = new *arguments
+      model.save ? model : nil
+    end
+
   end
 
 end

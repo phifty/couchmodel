@@ -82,16 +82,10 @@ describe "integration" do
   context "on saved models" do
 
     before :each do
-      @user_one = User.new :username => "user one", :email => "email one"
-      @user_one.save
-      @user_two = User.new :username => "user two", :email => "email two"
-      @user_two.save
-      @membership_one = Membership.new :created_at => "yesterday"
-      @membership_one.user = @user_one
-      @membership_one.save
-      @membership_two = Membership.new :created_at => "yesterday"
-      @membership_two.user = @user_two
-      @membership_two.save
+      @user_one = User.create :username => "user one", :email => "email one"
+      @user_two = User.create :username => "user two", :email => "email two"
+      @membership_one = Membership.create :created_at => "yesterday", :user => @user_one
+      @membership_two = Membership.create :created_at => "yesterday", :user => @user_two
     end
 
     describe "save" do

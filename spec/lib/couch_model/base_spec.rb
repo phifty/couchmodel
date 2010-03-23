@@ -158,6 +158,22 @@ describe BaseTestModel do
     
   end
 
+  describe "create" do
+
+    it "should return a new created model" do
+      model = BaseTestModel.create :id => "test_model_1"
+      model.should be_instance_of(BaseTestModel)
+      model.should_not be_new
+    end
+
+    it "should return nil on error" do
+      CouchModel::Transport.stub!(:request).and_raise(CouchModel::Transport::UnexpectedStatusCodeError.new(500))
+      model = BaseTestModel.create :id => "test_model_1"
+      model.should be_nil
+    end
+
+  end
+
   describe "all" do
 
     it "should return a collection for the class view" do
