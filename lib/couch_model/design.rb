@@ -42,12 +42,12 @@ module CouchModel
     def views=(view_hash)
       @views = [ ]
       view_hash.each do |view_name, view|
-        @views << View.new(self, view.merge(:name => view_name)) if view.is_a?(Hash)
+        @views << View.new(self, view.merge(:name => view_name.to_s)) if view.is_a?(Hash)
       end if view_hash.is_a?(Hash)
     end
 
     def generate_view(name, options = { })
-      view = View.new self, options.merge(:name => name)
+      view = View.new self, options.merge(:name => name.to_s)
       @views.insert 0, view
       view
     end

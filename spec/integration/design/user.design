@@ -1,7 +1,7 @@
 :id:        "user"
 :language:  "javascript"
 :views:
-  "user_count":
+  :user_count:
     :map:
       function(document) {
         if (document['model_class'] == 'User') {
