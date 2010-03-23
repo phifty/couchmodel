@@ -38,6 +38,10 @@ module CouchModel
           @design || raise(StandardError, "no database defined!")
         end
 
+        def count
+          all.total_count
+        end
+
         def method_missing(method_name, *arguments, &block)
           view = find_view method_name
           view ? view.collection(*arguments) : super

@@ -93,4 +93,12 @@ describe SetupTestModel do
 
   end
 
+  describe "count" do
+
+    it "should return the count of all documents of this class" do
+      SetupTestModel.count.should == 14
+    end
+
+  end
+
 end

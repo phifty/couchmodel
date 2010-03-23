@@ -133,6 +133,14 @@ describe "integration" do
 
     end
 
+    describe "count" do
+
+      it "should return the number of users" do
+        User.count.should >= 2
+      end
+
+    end
+
     describe "belongs_to" do
 
       it "should return the related model" do

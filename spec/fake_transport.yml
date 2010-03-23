@@ -177,6 +177,18 @@
       "rows":         [ ]
 -
   :http_method: "get"
+  :url:         "http://localhost:5984/test/_design/setup_test_model/_view/all"
+  :parameters:
+    :include_docs: true
+    :limit:        0
+  :response:
+    :code:      "200"
+    :body:
+      "total_rows":   14
+      "offset":       0
+      "rows":         [ ]
+-
+  :http_method: "get"
   :url:         "http://localhost:5984/test/_design/association_test_model_one/_view/by_related_id_and_name"
   :parameters:
     :include_docs: true
