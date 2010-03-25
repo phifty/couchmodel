@@ -28,9 +28,9 @@ module CouchModel
           end
         end
 
-        def key_accessor(key, options = { })
-          key_reader key, options
-          key_writer key, options
+        def key_accessor(*arguments)
+          key_reader *arguments
+          key_writer *arguments
         end
 
       end

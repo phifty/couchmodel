@@ -47,7 +47,7 @@ module CouchModel
           view ? view.collection(*arguments) : super
         end
 
-        def respond_to?(method_name, include_private = false)
+        def respond_to?(method_name, *arguments)
           view = find_view method_name
           view ? true : super
         end

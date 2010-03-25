@@ -1,3 +1,4 @@
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "core_extension", "array"))
 
 module CouchModel
 
@@ -55,15 +56,21 @@ module CouchModel
 
         def define_has_many_query(query_name, query)
           define_method :"#{query_name}_query", &query if query.is_a?(Proc)
+          define_method :"#{query_name}_query_proxy" do |*arguments|
+            if self.respond_to?(:"#{query_name}_query")
+              self.send :"#{query_name}_query", *arguments.resize(self.method(:"#{query_name}_query").arity)
+            else
+              { :key => self.id }
+            end            
+          end
         end
 
         def define_has_many_reader(reader_name, class_name, view_name)
           define_method :"#{reader_name}" do |*arguments|
-            query = if self.respond_to?(:"#{reader_name}_query")
-              arguments << nil while arguments.length < self.method(:"#{reader_name}_query").arity
-              self.send :"#{reader_name}_query", *arguments
-            else
-              { :key => "\"#{self.id}\"" }
+            query = self.send :"#{reader_name}_query_proxy", *arguments
+            if self.method(:"#{reader_name}_query").arity < arguments.size
+              last_argument = arguments.last
+              query.merge! last_argument.is_a?(Hash) ? last_argument : { }
             end
             Object.const_get(class_name).send :"#{view_name}", query
           end

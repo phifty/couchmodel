@@ -27,10 +27,11 @@ module CouchModel
     attr_reader :attributes
 
     def initialize(attributes = { })
-      @attributes = { Configuration::CLASS_KEY => self.class.to_s }
+      klass = self.class
+      @attributes = { Configuration::CLASS_KEY => klass.to_s }
       self.attributes = attributes
 
-      self.class.defaults.each do |key, value|
+      klass.defaults.each do |key, value|
         @attributes[key] = value unless @attributes.has_key?(key)
       end      
     end

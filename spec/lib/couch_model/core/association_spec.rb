@@ -109,6 +109,10 @@ describe AssociationTestModelTwo do
       @model.related(@other.name).should include(@other)
     end
 
+    it "should receive an extra query hash" do
+      @model.related(@other.name, :returns => :rows).first.should be_instance_of(CouchModel::Row)
+    end
+
   end
 
 end
