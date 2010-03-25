@@ -53,7 +53,7 @@ module CouchModel
     end
 
     def save!
-      raise InvalidModelError, "errors: #{errors.full_messages.join(' ')}" unless valid?
+      raise InvalidModelError, "errors: #{errors.full_messages.join(' / ')}" unless valid?
       raise StandardError, "unknown error while saving model" unless save
       true
     end
