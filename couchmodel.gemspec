@@ -3,7 +3,7 @@
 Gem::Specification.new do |specification|
   specification.name    = "couchmodel"
   specification.version = "0.1.0.beta4"
-  specification.date    = "2010-03-21"
+  specification.date    = "2010-03-25"
 
   specification.authors   = [ "Philipp Brüll" ]
   specification.email     = "b.phifty@gmail.com"
@@ -15,7 +15,7 @@ Gem::Specification.new do |specification|
   specification.extra_rdoc_files      = [ "README.rdoc" ]
   specification.rdoc_options          = [ "--line-numbers", "--main", "README.rdoc" ]
   specification.require_paths         = [ "lib" ]
-  specification.required_ruby_version = ">= 1.9.1"
+  specification.required_ruby_version = ">= 1.8"
   specification.rubygems_version      = "1.3.6"
 
   specification.files = [ "README.rdoc", "LICENSE", "Rakefile" ]
