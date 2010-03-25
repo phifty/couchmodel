@@ -36,6 +36,7 @@ To define a model, it's necessary to create a subclass of <tt>CouchModel::Base</
 
     key_accessor :name
     key_accessor :email
+    key_accessor :language, :default => "en"
 
   end
 
@@ -49,7 +50,8 @@ manually by calling <tt>CouchModel::Configuration.setup_databases</tt> and
 <tt>CouchModel::Configuration.setup_designs</tt>.
 
 The method <tt>key_accessor</tt> defined access methods to the given keys of the CouchDB document. It's also possible
-to use <tt>key_reader</tt> and <tt>key_writer</tt> here.
+to use <tt>key_reader</tt> and <tt>key_writer</tt> here. If the <tt>:default</tt> option is passed, the key will get
+a default value assigned during initialization of the class.
 
 == Design documents
 
@@ -67,7 +69,7 @@ A design document should look like this
   :id:        "test_design"
   :language:  "javascript"
   :views:
-    "view_name_1":
+    :view_name_1:
       :map:
         function(document) {
           ...
@@ -76,7 +78,7 @@ A design document should look like this
         function(key, values, rereduce) {
           ...
         };
-    "view_name_2":
+    :view_name_2:
       :keys: [ "key_one", "key_two" ]
     ...
 
@@ -113,12 +115,25 @@ generates getters and setters for the session object itself (<tt>session</tt> an
 
 The <tt>has_many</tt> acts as a wrapper for the specified view. The previously defined view
 <tt>by_user_id_and_created_at</tt> emits membership-documents by thier <tt>user_id</tt> and the <tt>created_at</tt>
-date. The given query option specifes a method that returns a query hash for the specifed view. The arguments for this
-method can be passed membership association method.
+date.
+Basically, the association can be accessed by a reader method. Options for querying the view can be passed by a hash.
 
-  user.membership(created_at)
+  user.membership(:startkey => [ ... ], :endkey => [ ... ], :descending => false)
 
-The returned <tt>CouchModel::Collection</tt> can be treated as an (read-only) array.
+The possible keys for that query hash can be taken from http://wiki.apache.org/couchdb/HTTP_view_API (Section Querying
+Options).
+
+If a <tt>:query</tt> option is defined (like in the example above), the given method is used to generate this query
+hash. When querying a view, the first arguments will be passed to the view and the result of the generator-method will
+be merged with the query hash (if given).
+
+  user.membership(created_at, :returns => :rows)
+
+The <tt>:returns</tt> option extends the possible keys defined by CouchDB. If not given or specified as
+<tt>:models</tt>, CouchModel will try to cast the returned rows into model classes. It also automatically passes the
+<tt>:include_docs</tt> option to CouchDB. If this option is specified as <tt>:rows</tt>, a collection of
+<tt>CouchModel::Row</tt> objects is returned that wraps the CouchDB result rows. That's maybe useful for views with a
+reduce function.
 
 == Rails integration
 
