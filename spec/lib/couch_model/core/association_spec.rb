@@ -24,6 +24,10 @@ class AssociationTestModelTwo < CouchModel::Base
            :view_name   => :by_related_id_and_name,
            :query       => lambda { |name| { :startkey => [ self.id, (name || nil) ], :endkey => [ self.id, (name || { }) ] } }
 
+  has_many :also_related,
+           :class_name  => "AssociationTestModelOne",
+           :view_name   => :by_related_id_and_name
+
 end
 
 describe AssociationTestModelOne do
@@ -111,6 +115,24 @@ describe AssociationTestModelTwo do
 
     it "should receive an extra query hash" do
       @model.related(@other.name, :returns => :rows).first.should be_instance_of(CouchModel::Row)
+    end
+
+  end
+
+  describe "also_related" do
+
+    before :each do
+      @other = AssociationTestModelOne.find "test_model_1"
+      @query = { :startkey => [ @model.id, @other.name ], :endkey => [ @model.id, @other.name ] }
+    end
+
+    it "should return a collection" do
+      @model.also_related(@query).should be_instance_of(CouchModel::Collection)
+    end
+
+    it "should include the test model one" do
+      @model.also_related(@query).should include(@other)
+      @model.also_related(@query).should include(@other)
     end
 
   end
