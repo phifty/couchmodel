@@ -124,8 +124,8 @@ The possible keys for that query hash can be taken from http://wiki.apache.org/c
 Options).
 
 If a <tt>:query</tt> option is defined (like in the example above), the given method is used to generate this query
-hash. When querying a view, the first arguments will be passed to the view and the result of the generator-method will
-be merged with the query hash (if given).
+hash. When querying a view, the first arguments will be passed to that method and the result of the generator-method
+will be merged with the additionally given query hash.
 
   user.membership(created_at, :returns => :rows)
 
