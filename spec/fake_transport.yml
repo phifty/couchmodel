@@ -90,8 +90,8 @@
 -
   :http_method: "delete"
   :url:         "http://localhost:5984/test/test_model_1"
-  :parameters:
-    :rev:  "0"
+  :headers:
+    "If-Match": "0"
   :response:
     :code:      "200"
     :body:

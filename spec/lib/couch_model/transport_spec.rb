@@ -24,7 +24,7 @@ describe CouchModel::Transport do
     end
 
     it "should initialize the correct request object" do
-      Net::HTTP::Get.should_receive(:new).with("/").and_return(@request)
+      Net::HTTP::Get.should_receive(:new).with("/", { }).and_return(@request)
       do_request
     end
 
@@ -53,7 +53,7 @@ describe CouchModel::Transport do
     
     it "should serialize the given parameters" do
       CouchModel::Transport.send(:serialize_parameters, @parameters).should ==
-        "?another_test=test&test=[%22test%22,1,2,3]"
+        "?another_test=%22test%22&test=[%22test%22,1,2,3]"
     end
 
   end
