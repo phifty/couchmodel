@@ -1,7 +1,6 @@
 require 'uri'
 require 'cgi'
 require 'net/http'
-require 'base64'
 require 'json'
 
 module CouchModel
@@ -133,12 +132,16 @@ module CouchModel
     private
 
     def initialize_headers
+      @headers["Accept"] = "application/json"
+    end
+
+    def initialize_request
+      super
       if @auth_type == :basic
-        @headers["Authorization"] = "Basic " + Base64.encode64("#{@username}:#{@password}")
-      elsif !@auth_type.nil?
+        @request.basic_auth @username, @password
+      elsif @auth_type
         raise NotImplementedError, "the given auth_type [#{@auth_type}] is not implemented"
       end
-      @headers["Accept"] = "application/json"
     end
 
     def quote_parameters
