@@ -66,20 +66,20 @@ a design document will be created (but not saved to the file). The design ducume
 
 A design document should look like this
 
-  :id:        "test_design"
-  :language:  "javascript"
-  :views:
-    :view_name_1:
-      :map:
+  id:        "test_design"
+  language:  "javascript"
+  views:
+    view_name_1:
+      map:
         function(document) {
           ...
         };
-      :reduce:
+      reduce:
         function(key, values, rereduce) {
           ...
         };
-    :view_name_2:
-      :keys: [ "key_one", "key_two" ]
+    view_name_2:
+      keys: [ "key_one", "key_two" ]
     ...
 
 It will create the methods <tt>Model.view_name_1</tt> and <tt>Model.view_name_2</tt>, which returns the result of the

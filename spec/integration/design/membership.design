@@ -1,5 +1,5 @@
-:id:        "membership"
-:language:  "javascript"
-:views:
-  :by_user_id_and_created_at:
-    :keys:  [ "user_id", "created_at" ]
+id:        "membership"
+language:  "javascript"
+views:
+  by_user_id_and_created_at:
+    keys:  [ "user_id", "created_at" ]

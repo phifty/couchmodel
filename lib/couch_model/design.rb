@@ -33,7 +33,9 @@ module CouchModel
     end
 
     def load_file
-      self.id, self.language, self.views = YAML::load_file(self.filename).values_at(:id, :language, :views)
+      hash = YAML::load_file self.filename
+      symbolize_hash_keys hash
+      self.id, self.language, self.views = hash.values_at(:id, :language, :views)
       true
     rescue Errno::ENOENT
       false
@@ -86,6 +88,14 @@ module CouchModel
     private
 
     attr_writer :rev
+
+    def symbolize_hash_keys(hash)
+      hash.keys.each do |key|
+        value = hash.delete key
+        symbolize_hash_keys value if value.is_a?(Hash)
+        hash[(key.to_sym rescue key) || key] = value
+      end
+    end
 
     def evaluate(response)
       self.rev = response["_rev"] if response.has_key?("_rev")
