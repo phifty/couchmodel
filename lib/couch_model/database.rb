@@ -25,7 +25,7 @@ module CouchModel
     end
 
     def create!
-      Transport.request :put, url, :expected_status_code => 201
+      ExtendedTransport.request :put, url, :expected_status_code => 201
     end
 
     def create_if_missing!
@@ -33,7 +33,7 @@ module CouchModel
     end
 
     def delete!
-      Transport.request :delete, url, :expected_status_code => 200
+      ExtendedTransport.request :delete, url, :expected_status_code => 200
     end
 
     def delete_if_exists!
@@ -41,7 +41,7 @@ module CouchModel
     end
 
     def informations
-      Transport.request :get, url, :expected_status_code => 200
+      ExtendedTransport.request :get, url, :expected_status_code => 200
     end
 
     def exists?

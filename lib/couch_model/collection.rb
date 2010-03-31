@@ -64,7 +64,7 @@ module CouchModel
     end
 
     def fetch_response
-      @response = Transport.request(
+      @response = ExtendedTransport.request(
         :get, url,
         :parameters            => request_parameters,
         :expected_status_code  => 200
@@ -72,7 +72,7 @@ module CouchModel
     end
 
     def fetch_meta_response
-      @response = Transport.request(
+      @response = ExtendedTransport.request(
         :get, url,
         :parameters            => request_parameters.merge(:limit => 0),
         :expected_status_code  => 200

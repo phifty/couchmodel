@@ -63,9 +63,9 @@ module CouchModel
     end
 
     def load
-      load_response Transport.request(:get, url, :expected_status_code => 200)
+      load_response ExtendedTransport.request(:get, url, :expected_status_code => 200)
       true
-    rescue Transport::UnexpectedStatusCodeError => error
+    rescue ExtendedTransport::UnexpectedStatusCodeError => error
       upgrade_unexpected_status_error error
     end
 
@@ -77,10 +77,10 @@ module CouchModel
 
     def destroy
       return false if new?
-      Transport.request :delete, self.url, :headers => { "If-Match" => self.rev }, :expected_status_code => 200
+      ExtendedTransport.request :delete, self.url, :headers => { "If-Match" => self.rev }, :expected_status_code => 200
       clear_rev
       true
-    rescue Transport::UnexpectedStatusCodeError => error
+    rescue ExtendedTransport::UnexpectedStatusCodeError => error
       upgrade_unexpected_status_error error
     end
 
@@ -105,19 +105,19 @@ module CouchModel
     end
 
     def create
-      response = Transport.request :post, self.database.url, :body => self.attributes, :expected_status_code => 201
+      response = ExtendedTransport.request :post, self.database.url, :body => self.attributes, :expected_status_code => 201
       self.id  = response["id"]
       self.rev = response["rev"]
       true
-    rescue Transport::UnexpectedStatusCodeError
+    rescue ExtendedTransport::UnexpectedStatusCodeError
       false
     end
 
     def update
-      response = Transport.request :put, self.url, :body => self.attributes, :expected_status_code => 201
+      response = ExtendedTransport.request :put, self.url, :body => self.attributes, :expected_status_code => 201
       self.rev = response["rev"]
       true
-    rescue Transport::UnexpectedStatusCodeError
+    rescue ExtendedTransport::UnexpectedStatusCodeError
       false
     end
 

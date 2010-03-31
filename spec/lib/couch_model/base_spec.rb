@@ -93,7 +93,7 @@ describe BaseTestModel do
       end
 
       it "should return false on wrong status code" do
-        CouchModel::Transport.stub!(:request).and_raise(CouchModel::Transport::UnexpectedStatusCodeError.new(404))
+        CouchModel::ExtendedTransport.stub!(:request).and_raise(CouchModel::ExtendedTransport::UnexpectedStatusCodeError.new(404))
         do_save.should be_false
       end
 
@@ -110,7 +110,7 @@ describe BaseTestModel do
       end
 
       it "should return false on wrong status code" do
-        CouchModel::Transport.stub!(:request).and_raise(CouchModel::Transport::UnexpectedStatusCodeError.new(404))
+        CouchModel::ExtendedTransport.stub!(:request).and_raise(CouchModel::ExtendedTransport::UnexpectedStatusCodeError.new(404))
         do_save.should be_false
       end
 
@@ -143,7 +143,7 @@ describe BaseTestModel do
       end
 
       it "should raise NotFoundError on wrong status code" do
-        CouchModel::Transport.stub!(:request).and_raise(CouchModel::Transport::UnexpectedStatusCodeError.new(404))
+        CouchModel::ExtendedTransport.stub!(:request).and_raise(CouchModel::ExtendedTransport::UnexpectedStatusCodeError.new(404))
         lambda do
           do_destroy
         end.should raise_error(CouchModel::Base::NotFoundError)
@@ -175,7 +175,7 @@ describe BaseTestModel do
     end
 
     it "should return nil on error" do
-      CouchModel::Transport.stub!(:request).and_raise(CouchModel::Transport::UnexpectedStatusCodeError.new(500))
+      CouchModel::ExtendedTransport.stub!(:request).and_raise(CouchModel::ExtendedTransport::UnexpectedStatusCodeError.new(500))
       model = BaseTestModel.create :id => "test_model_1"
       model.should be_nil
     end

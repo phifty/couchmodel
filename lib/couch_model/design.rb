@@ -65,7 +65,7 @@ module CouchModel
     end
 
     def exists?
-      Transport.request :get, self.url, :expected_status_code => 200
+      ExtendedTransport.request :get, self.url, :expected_status_code => 200
       true
     rescue Transport::UnexpectedStatusCodeError
       false
@@ -73,9 +73,9 @@ module CouchModel
 
     def push
       url = self.url
-      evaluate Transport.request(:get, url)
+      evaluate ExtendedTransport.request(:get, url)
 
-      Transport.request :put, url, :body => self.to_hash, :expected_status_code => 201
+      ExtendedTransport.request :put, url, :body => self.to_hash, :expected_status_code => 201
       true
     end
 

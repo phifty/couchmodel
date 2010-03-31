@@ -19,19 +19,19 @@ module CouchModel
     end
 
     def informations
-      Transport.request :get, url + "/", :expected_status_code => 200
+      ExtendedTransport.request :get, url + "/", :expected_status_code => 200
     end
 
     def statistics
-      Transport.request :get, url + "/_stats", :expected_status_code => 200
+      ExtendedTransport.request :get, url + "/_stats", :expected_status_code => 200
     end
 
     def database_names
-      Transport.request :get, url + "/_all_dbs", :expected_status_code => 200
+      ExtendedTransport.request :get, url + "/_all_dbs", :expected_status_code => 200
     end
 
     def uuids(count = 1)
-      response = Transport.request :get, url + "/_uuids", :expected_status_code => 200, :parameters => { :count => count }
+      response = ExtendedTransport.request :get, url + "/_uuids", :expected_status_code => 200, :parameters => { :count => count }
       response["uuids"]
     end
 

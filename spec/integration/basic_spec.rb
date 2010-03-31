@@ -121,7 +121,12 @@ describe "integration" do
     describe "all" do
 
       it "should include the saved user" do
-        User.all.should include(@user_one)
+        begin
+          User.all.should include(@user_one)
+        rescue Object => error
+          puts error.backtrace
+          raise error
+        end
         User.all.should include(@user_two)
       end
 
