@@ -3,7 +3,13 @@ class String # :nodoc:
 
   # This method converts a CamelCaseString into an underscore_string.
   def underscore
-    self.gsub(/([a-z][A-Z])/){ |match| "#{match[0]}_#{match[1]}" }.downcase
+    word = self.to_s.dup
+    word.gsub!(/::/, '/')
+    word.gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
+    word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
+    word.tr!("-", "_")
+    word.downcase!
+    word
   end
 
   # This method converts an underscore_string into a CamelCaseString.

@@ -238,7 +238,10 @@ describe ActiveTestModel do
     end
 
     it "should return all attributes as json" do
-      @model.to_json.should == "{\"_id\":\"test_model_1\",\"email\":\"test\",\"model_class\":\"ActiveTestModel\",\"name\":\"test\"}"
+      @model.to_json.should =~ /"_id":"test_model_1"/
+      @model.to_json.should =~ /"email":"test"/
+      @model.to_json.should =~ /"model_class":"ActiveTestModel"/
+      @model.to_json.should =~ /"name":"test"/
     end
 
   end

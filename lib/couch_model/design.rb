@@ -29,7 +29,7 @@ module CouchModel
     end
 
     def filename
-      @filename ||= File.join(CouchModel::Configuration.design_directory, "#{model_class.to_s.underscore}.design")
+      @filename ||= File.join(CouchModel::Configuration.design_directory, "#{@model_class.to_s.underscore}.design")
     end
 
     def load_file
