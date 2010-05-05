@@ -6,16 +6,17 @@ implementation to integrate into an Rails 3 application.
 
 The current version is under development and open for everyone to find bugs and post them into the issue tracker.
 
-The code has been tested Ruby 1.9.1, CouchDB 0.10.0 and Rails 3.0.0.beta.
+The code has been tested Ruby 1.8.7 and 1.9.1, CouchDB 0.10.0 and Rails 3.0.0.beta3.
 
 == Dependencies
 
-If CouchModel is used without Rails, the ruby standard library (tested with 1.9.1) if the only requirement.
+Basically, the ruby standard library (1.9.1) if the only requirement. If you still using Ruby 1.8, the json gem is
+required.
 
 If the activemodel gem is installed, CouchModel automatically provides an interface to Rails 3.
 
-To run the test suite, <tt>rspec</tt> (tested with 1.2.9) is required. A CouchDB instance is just required for the
-integration tests (task <tt>spec:integration</tt>).
+To run the test suite, rspec (tested with 1.2.9) is required. A CouchDB instance is only required for the integration
+tests (task <tt>spec:integration</tt>).
 
 == Installation
 
