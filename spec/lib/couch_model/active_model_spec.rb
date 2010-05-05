@@ -36,6 +36,16 @@ describe ActiveTestModel do
     @model = ActiveTestModel.new :id => "test_model_1"
   end
 
+  it "should fullfill all the lint tests" do
+    test_to_key
+    test_to_param
+    test_valid?
+    test_persisted?
+    test_model_naming
+    test_errors_aref
+    test_errors_full_messages
+  end
+
   describe "initialize" do
 
     it "should call the initialize callback" do
@@ -44,31 +54,11 @@ describe ActiveTestModel do
 
   end
 
-  describe "new_record?" do
-
-    it "should fullfill the lint test" do
-      test_new_record?
-    end
-
-  end
-
   describe "destroyed?" do
-
-    it "should fullfill the lint test" do
-      test_destroyed?
-    end
 
     it "should return true if model is new" do
       @model.stub!(:new?).and_return(true)
       @model.should be_destroyed
-    end
-
-  end
-
-  describe "naming" do
-
-    it "should fullfill the lint test" do
-      test_model_naming
     end
 
   end
@@ -124,6 +114,10 @@ describe ActiveTestModel do
   end
 
   describe "to_param" do
+
+    before :each do
+      @model.stub!(:persisted?).and_return(true)
+    end
 
     it "should return the model's id" do
       @model.to_param.should == @model.id

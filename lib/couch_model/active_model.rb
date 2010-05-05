@@ -37,10 +37,14 @@ module CouchModel
 
     alias new_record? new?
 
+    def persisted?
+      !new?
+    end
+
     alias destroyed? new?
 
     def to_param
-      id
+      persisted? ? id : nil
     end
 
     alias save_without_active_model save
