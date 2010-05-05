@@ -9,8 +9,8 @@ task :default => :spec
 
 specification = Gem::Specification.new do |specification|
   specification.name              = "couchmodel"
-  specification.version           = "0.1.0"
-  specification.date              = "2010-03-31"
+  specification.version           = "0.1.1"
+  specification.date              = "2010-05-05"
 
   specification.authors           = [ "Philipp Bruell" ]
   specification.email             = "b.phifty@gmail.com"
@@ -26,6 +26,8 @@ specification = Gem::Specification.new do |specification|
   specification.require_path      = "lib"
 
   specification.test_files        = Dir["spec/**/*_spec.rb"]
+
+  specification.add_development_dependency "rspec"
 end
 
 Rake::GemPackageTask.new(specification) do |package|
