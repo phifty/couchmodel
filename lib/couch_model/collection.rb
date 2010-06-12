@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "transport")
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "transport", "json"))
 require File.join(File.dirname(__FILE__), "row")
 
 module CouchModel
@@ -64,7 +64,7 @@ module CouchModel
     end
 
     def fetch_response
-      @response = ExtendedTransport.request(
+      @response = Transport::JSON.request(
         :get, url,
         :parameters            => request_parameters,
         :expected_status_code  => 200
@@ -72,7 +72,7 @@ module CouchModel
     end
 
     def fetch_meta_response
-      @response = ExtendedTransport.request(
+      @response = Transport::JSON.request(
         :get, url,
         :parameters            => request_parameters.merge(:limit => 0),
         :expected_status_code  => 200

@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "transport")
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "transport", "json"))
 
 module CouchModel
 
@@ -19,19 +19,19 @@ module CouchModel
     end
 
     def informations
-      ExtendedTransport.request :get, url + "/", :expected_status_code => 200
+      Transport::JSON.request :get, url + "/", :expected_status_code => 200
     end
 
     def statistics
-      ExtendedTransport.request :get, url + "/_stats", :expected_status_code => 200
+      Transport::JSON.request :get, url + "/_stats", :expected_status_code => 200
     end
 
     def database_names
-      ExtendedTransport.request :get, url + "/_all_dbs", :expected_status_code => 200
+      Transport::JSON.request :get, url + "/_all_dbs", :expected_status_code => 200
     end
 
     def uuids(count = 1)
-      response = ExtendedTransport.request :get, url + "/_uuids", :expected_status_code => 200, :parameters => { :count => count }
+      response = Transport::JSON.request :get, url + "/_uuids", :expected_status_code => 200, :parameters => { :count => count }
       response["uuids"]
     end
 

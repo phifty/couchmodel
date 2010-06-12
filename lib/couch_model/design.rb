@@ -1,5 +1,5 @@
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "transport", "json"))
 require File.join(File.dirname(__FILE__), "configuration")
-require File.join(File.dirname(__FILE__), "transport")
 require File.join(File.dirname(__FILE__), "base")
 require File.join(File.dirname(__FILE__), "view")
 require 'yaml'
@@ -67,17 +67,17 @@ module CouchModel
     end
 
     def exists?
-      ExtendedTransport.request :get, self.url, :expected_status_code => 200
+      Transport::JSON.request :get, self.url, :expected_status_code => 200
       true
-    rescue Transport::UnexpectedStatusCodeError
+    rescue Transport::JSON::UnexpectedStatusCodeError
       false
     end
 
     def push
       url = self.url
-      evaluate ExtendedTransport.request(:get, url)
+      evaluate Transport::JSON.request(:get, url)
 
-      ExtendedTransport.request :put, url, :body => self.to_hash, :expected_status_code => 201
+      Transport::JSON.request :put, url, :body => self.to_hash, :expected_status_code => 201
       true
     end
 

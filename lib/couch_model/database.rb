@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "transport")
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "transport", "json"))
 require File.join(File.dirname(__FILE__), "server")
 require File.join(File.dirname(__FILE__), "collection")
 
@@ -25,7 +25,7 @@ module CouchModel
     end
 
     def create!
-      ExtendedTransport.request :put, url, :expected_status_code => 201
+      Transport::JSON.request :put, url, :expected_status_code => 201
     end
 
     def create_if_missing!
@@ -33,7 +33,7 @@ module CouchModel
     end
 
     def delete!
-      ExtendedTransport.request :delete, url, :expected_status_code => 200
+      Transport::JSON.request :delete, url, :expected_status_code => 200
     end
 
     def delete_if_exists!
@@ -41,7 +41,7 @@ module CouchModel
     end
 
     def informations
-      ExtendedTransport.request :get, url, :expected_status_code => 200
+      Transport::JSON.request :get, url, :expected_status_code => 200
     end
 
     def exists?

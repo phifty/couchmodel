@@ -11,7 +11,7 @@ module FakeTransport
   end
 
   def self.transport_class
-    CouchModel::ExtendedTransport
+    Transport::JSON
   end
 
   def self.fake!

@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "core_extension", "string"))
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "transport", "json"))
 require File.join(File.dirname(__FILE__), "configuration")
-require File.join(File.dirname(__FILE__), "transport")
 require File.join(File.dirname(__FILE__), "server")
 require File.join(File.dirname(__FILE__), "database")
 require File.join(File.dirname(__FILE__), "design")
@@ -63,9 +63,9 @@ module CouchModel
     end
 
     def load
-      load_response ExtendedTransport.request(:get, url, :expected_status_code => 200)
+      load_response Transport::JSON.request(:get, url, :expected_status_code => 200)
       true
-    rescue ExtendedTransport::UnexpectedStatusCodeError => error
+    rescue Transport::JSON::UnexpectedStatusCodeError => error
       upgrade_unexpected_status_error error
     end
 
@@ -77,10 +77,10 @@ module CouchModel
 
     def destroy
       return false if new?
-      ExtendedTransport.request :delete, self.url, :headers => { "If-Match" => self.rev }, :expected_status_code => 200
+      Transport::JSON.request :delete, self.url, :headers => { "If-Match" => self.rev }, :expected_status_code => 200
       clear_rev
       true
-    rescue ExtendedTransport::UnexpectedStatusCodeError => error
+    rescue Transport::JSON::UnexpectedStatusCodeError => error
       upgrade_unexpected_status_error error
     end
 
@@ -105,19 +105,19 @@ module CouchModel
     end
 
     def create
-      response = ExtendedTransport.request :post, self.database.url, :body => self.attributes, :expected_status_code => 201
+      response = Transport::JSON.request :post, self.database.url, :body => self.attributes, :expected_status_code => 201
       self.id  = response["id"]
       self.rev = response["rev"]
       true
-    rescue ExtendedTransport::UnexpectedStatusCodeError
+    rescue Transport::JSON::UnexpectedStatusCodeError
       false
     end
 
     def update
-      response = ExtendedTransport.request :put, self.url, :body => self.attributes, :expected_status_code => 201
+      response = Transport::JSON.request :put, self.url, :body => self.attributes, :expected_status_code => 201
       self.rev = response["rev"]
       true
-    rescue ExtendedTransport::UnexpectedStatusCodeError
+    rescue Transport::JSON::UnexpectedStatusCodeError
       false
     end
 

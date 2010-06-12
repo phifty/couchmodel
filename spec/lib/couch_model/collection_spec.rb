@@ -41,7 +41,7 @@ describe CouchModel::Collection do
     describe "without a previously performed fetch" do
 
       it "should perform a meta fetch (with a limit of zero)" do
-        CouchModel::ExtendedTransport.should_receive(:request).with(anything, anything,
+        Transport::JSON.should_receive(:request).with(anything, anything,
           hash_including(:parameters => { :include_docs => true, :limit => 0 }))
         @collection.total_count
       end
@@ -59,7 +59,7 @@ describe CouchModel::Collection do
       end
 
       it "should not perform another fetch" do
-        CouchModel::ExtendedTransport.should_not_receive(:request)
+        Transport::JSON.should_not_receive(:request)
         @collection.total_count
       end
 

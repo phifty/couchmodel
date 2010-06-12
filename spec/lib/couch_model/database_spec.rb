@@ -49,11 +49,11 @@ describe CouchModel::Database do
 
     before :each do
       @response = { :code => "201" }
-      CouchModel::ExtendedTransport.stub!(:request).and_return(@response)
+      Transport::JSON.stub!(:request).and_return(@response)
     end
 
     it "should create the database" do
-      CouchModel::ExtendedTransport.should_receive(:request).with(:put, /test$/, anything).and_return(@response)
+      Transport::JSON.should_receive(:request).with(:put, /test$/, anything).and_return(@response)
       @database.create!
     end
 
@@ -83,11 +83,11 @@ describe CouchModel::Database do
 
     before :each do
       @response = { :code => "200" }
-      CouchModel::ExtendedTransport.stub!(:request).and_return(@response)
+      Transport::JSON.stub!(:request).and_return(@response)
     end
 
     it "should delete the database" do
-      CouchModel::ExtendedTransport.should_receive(:request).with(:delete, /test$/, anything).and_return(@response)
+      Transport::JSON.should_receive(:request).with(:delete, /test$/, anything).and_return(@response)
       @database.delete!
     end
 
