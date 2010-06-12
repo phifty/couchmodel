@@ -6,7 +6,7 @@ implementation to integrate into an Rails 3 application.
 
 The current version is under development and open for everyone to find bugs and post them into the issue tracker.
 
-The code has been tested Ruby 1.8.7 and 1.9.1, CouchDB 0.10.0 and Rails 3.0.0.beta3.
+The code has been tested Ruby 1.8.7 and 1.9.1, CouchDB 0.10.0 and Rails 3.0.0.beta4.
 
 == Dependencies
 

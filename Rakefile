@@ -9,8 +9,8 @@ task :default => :spec
 
 specification = Gem::Specification.new do |specification|
   specification.name              = "couchmodel"
-  specification.version           = "0.1.1"
-  specification.date              = "2010-05-05"
+  specification.version           = "0.1.2"
+  specification.date              = "2010-06-12"
 
   specification.authors           = [ "Philipp Bruell" ]
   specification.email             = "b.phifty@gmail.com"
@@ -47,7 +47,7 @@ Spec::Rake::SpecTask.new do |task|
 end
 
 namespace :spec do
-  
+
   desc "Run all integration specs in spec/integration directory"
   Spec::Rake::SpecTask.new(:integration) do |task|
     task.spec_files = FileList["spec/integration/**/*_spec.rb"]
