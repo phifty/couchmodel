@@ -7,12 +7,6 @@ module Transport
   # Common transport layer for http transfers.
   class Base
 
-    attr_reader :http_method
-    attr_reader :url
-    attr_reader :options
-    attr_reader :headers
-    attr_reader :parameters
-    attr_reader :body
     attr_reader :response
 
     def initialize(http_method, url, options = { })
