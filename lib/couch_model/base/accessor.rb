@@ -15,6 +15,7 @@ module CouchModel
       module ClassMethods
 
         def key_reader(key, options = { })
+          raise ArgumentError, "method #{key} is already defined" if method_defined?(:"#{key}")
           set_default key, options[:default] if options.has_key?(:default)
           define_method :"#{key}" do
             @attributes[key.to_s]
@@ -22,6 +23,7 @@ module CouchModel
         end
 
         def key_writer(key, options = { })
+          raise ArgumentError, "method #{key}= is already defined" if method_defined?(:"#{key}=")
           set_default key, options[:default] if options.has_key?(:default)
           define_method :"#{key}=" do |value|
             @attributes[key.to_s] = value
