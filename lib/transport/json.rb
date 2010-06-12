@@ -12,45 +12,48 @@ module Transport
     attr_reader :password
 
     def initialize(http_method, url, options = { })
-      super http_method, url, options
-      @auth_type = options[:auth_type]
-      @username  = options[:username]
-      @password  = options[:password]
+      @options = options
+      modify_headers
+      modify_parameters
+      modify_body
+      super http_method, url, @options
+      initialize_authentication
     end
 
     def perform
-      initialize_headers
       super
       parse_response
     end
 
     private
 
-    def initialize_headers
-      @headers["Accept"] = "application/json"
+    def modify_headers
+      headers = (@options[:headers] || { }).merge("Accept" => "application/json")
+      headers.merge! "Content-Type" => "application/json" if @options[:body]
+      @options[:headers] = headers
     end
 
-    def initialize_request
-      super
-      if @auth_type == :basic
-        @request.basic_auth @username, @password
-      elsif @auth_type
-        raise NotImplementedError, "the given auth_type [#{@auth_type}] is not implemented"
+    def modify_parameters
+      parameters = @options[:parameters]
+      if parameters
+        parameters.each do |key, value|
+          parameters[key] = value.to_json if value.respond_to?(:to_json)
+        end
+        @options[:parameters] = parameters
       end
     end
 
-    def quote_parameters
-      @parameters.each do |key, value|
-        @parameters[key] = value.to_json if value.respond_to?(:to_json)
-      end
-      super
+    def modify_body
+      body = @options[:body]
+      @options[:body] = body.to_json if body
     end
 
-    def initialize_request_body
-      super
-      if @body
-        @request.body = @body.to_json
-        @request["Content-Type"] = "application/json"
+    def initialize_authentication
+      auth_type = @options[:auth_type]
+      if auth_type == :basic
+        @request.basic_auth @options[:username], @options[:password]
+      elsif auth_type
+        raise NotImplementedError, "the given auth_type [#{auth_type}] is not implemented"
       end
     end
 

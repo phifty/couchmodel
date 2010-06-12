@@ -11,13 +11,14 @@ describe Transport::JSON do
       @http_method = :get
       @url = "http://localhost:5984/"
       @options = {
-        :auth_type            => :basic,
-        :username             => "test",
-        :password             => "test",
-        :expected_status_code => 200
+        :auth_type => :basic,
+        :username  => "test",
+        :password  => "test",
+        :body      => "test"
       }
 
-      @request = Net::HTTP::Get.new "/", { }
+      @request_builder = Transport::Request::Builder.new @http_method, @url, @options
+
       @response = Object.new
       @response.stub!(:code).and_return("200")
       @response.stub!(:body).and_return("{\"test\":\"test\"}")
@@ -29,7 +30,9 @@ describe Transport::JSON do
     end
 
     it "should initialize the correct request object" do
-      Net::HTTP::Get.should_receive(:new).with("/", { "Accept" => "application/json" }).and_return(@request)
+      Transport::Request::Builder.should_receive(:new).with(
+        @http_method, @url, hash_including(:headers => { "Accept" => "application/json", "Content-Type" => "application/json" })
+      ).and_return(@request_builder)
       do_request
     end
 

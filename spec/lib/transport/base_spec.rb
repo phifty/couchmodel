@@ -12,7 +12,8 @@ describe Transport::Base do
       @url = "http://localhost:5984/"
       @options = { }
 
-      @request = Net::HTTP::Get.new "/", { }
+      @request_builder = Transport::Request::Builder.new @http_method, @url, @options
+
       @response = Object.new
       @response.stub!(:code).and_return("200")
       @response.stub!(:body).and_return("test")
@@ -23,8 +24,8 @@ describe Transport::Base do
       Transport::Base.request @http_method, @url, @options.merge(options)
     end
 
-    it "should initialize the correct request object" do
-      Net::HTTP::Get.should_receive(:new).with("/", { }).and_return(@request)
+    it "should initialize the correct request builder" do
+      Transport::Request::Builder.should_receive(:new).with(@http_method, @url, @options).and_return(@request_builder)
       do_request
     end
 
@@ -41,21 +42,6 @@ describe Transport::Base do
       lambda do
         do_request :expected_status_code => 201
       end.should raise_error(Transport::UnexpectedStatusCodeError)
-    end
-
-    context "with parameters" do
-
-      before :each do
-        @options.merge! :parameters => { :foo => "bar", :test => [ "value1", "value2" ] }
-      end
-
-      it "should initialize the correct request object" do
-        Net::HTTP::Get.should_receive(:new).with(
-          "/?foo=bar&test=value1&test=value2", { }
-        ).and_return(@request)
-        do_request
-      end
-
     end
 
   end

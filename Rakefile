@@ -27,7 +27,7 @@ specification = Gem::Specification.new do |specification|
 
   specification.test_files        = Dir["spec/**/*_spec.rb"]
 
-  specification.add_development_dependency "rspec"
+  specification.add_development_dependency "rspec", ">= 1.3.0"
 end
 
 Rake::GemPackageTask.new(specification) do |package|
