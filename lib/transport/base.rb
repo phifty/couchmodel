@@ -16,11 +16,12 @@ module Transport
     attr_reader :response
 
     def initialize(http_method, url, options = { })
-      @http_method  = http_method
-      @uri          = URI.parse url
-      @headers      = options[:headers]     || { }
-      @parameters   = options[:parameters]  || { }
-      @body         = options[:body]
+      @http_method          = http_method
+      @uri                  = URI.parse url
+      @headers              = options[:headers]     || { }
+      @parameters           = options[:parameters]  || { }
+      @body                 = options[:body]
+      @expected_status_code = options[:expected_status_code]
     end
 
     def perform
@@ -29,6 +30,7 @@ module Transport
       initialize_request
       initialize_request_body
       perform_request
+      check_status_code
     end
 
     private
@@ -80,6 +82,13 @@ module Transport
       end
     end
 
+    def check_status_code
+      return unless @expected_status_code
+      response_code = @response.code
+      response_body = @response.body
+      raise UnexpectedStatusCodeError.new(response_code.to_i, response_body) if @expected_status_code.to_s != response_code
+    end
+
     def self.request(http_method, url, options = { })
       transport = new http_method, url, options
       transport.perform
@@ -88,4 +97,21 @@ module Transport
 
   end
 
+  # The UnexpectedStatusCodeError is raised if the :expected_status_code option is given to
+  # the :request method and the responded status code is different from the expected one.
+  class UnexpectedStatusCodeError < StandardError
+
+    attr_reader :status_code
+    attr_reader :message
+
+    def initialize(status_code, message = nil)
+      @status_code, @message = status_code, message
+    end
+
+    def to_s
+      "#{super} received status code #{self.status_code}" + (@message ? " [#{@message}]" : "")
+    end
+
+  end
+  
 end

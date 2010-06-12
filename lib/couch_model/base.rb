@@ -65,7 +65,7 @@ module CouchModel
     def load
       load_response Transport::JSON.request(:get, url, :expected_status_code => 200)
       true
-    rescue Transport::JSON::UnexpectedStatusCodeError => error
+    rescue Transport::UnexpectedStatusCodeError => error
       upgrade_unexpected_status_error error
     end
 
@@ -80,7 +80,7 @@ module CouchModel
       Transport::JSON.request :delete, self.url, :headers => { "If-Match" => self.rev }, :expected_status_code => 200
       clear_rev
       true
-    rescue Transport::JSON::UnexpectedStatusCodeError => error
+    rescue Transport::UnexpectedStatusCodeError => error
       upgrade_unexpected_status_error error
     end
 
@@ -109,7 +109,7 @@ module CouchModel
       self.id  = response["id"]
       self.rev = response["rev"]
       true
-    rescue Transport::JSON::UnexpectedStatusCodeError
+    rescue Transport::UnexpectedStatusCodeError
       false
     end
 
@@ -117,7 +117,7 @@ module CouchModel
       response = Transport::JSON.request :put, self.url, :body => self.attributes, :expected_status_code => 201
       self.rev = response["rev"]
       true
-    rescue Transport::JSON::UnexpectedStatusCodeError
+    rescue Transport::UnexpectedStatusCodeError
       false
     end
 

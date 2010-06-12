@@ -14,6 +14,10 @@ module FakeTransport
     Transport::JSON
   end
 
+  def self.unexpected_status_code_error_class
+    Transport::UnexpectedStatusCodeError
+  end
+
   def self.fake!
     return unless @enabled
     @@fake ||= YAML::load_file File.join(File.dirname(__FILE__), "fake_transport.yml")
@@ -30,7 +34,7 @@ module FakeTransport
           hash[:headers] == headers
       end
       raise StandardError, "no fake request found for [#{http_method} #{url} #{parameters.inspect} #{headers.inspect}]" unless request
-      raise transport_class::UnexpectedStatusCodeError.new(request[:response][:code].to_i, request[:response][:body]) if expected_status_code && expected_status_code.to_s != request[:response][:code]
+      raise unexpected_status_code_error_class.new(request[:response][:code].to_i, request[:response][:body]) if expected_status_code && expected_status_code.to_s != request[:response][:code]
       request[:response][:body].dup
     end
   end

@@ -48,12 +48,6 @@ describe Transport::JSON do
       end.should raise_error(NotImplementedError)
     end
 
-    it "should raise UnexpectedStatusCodeError if responded status code is wrong" do
-      lambda do
-        do_request :expected_status_code => 201
-      end.should raise_error(Transport::JSON::UnexpectedStatusCodeError)
-    end
-
   end
 
 end
