@@ -254,7 +254,12 @@ describe ActiveTestModel do
     end
     
     it "should return all attributes as xml" do
-      @model.to_xml.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<active-test-model>\n  <-id>test_model_1</-id>\n  <email>test</email>\n  <model-class>ActiveTestModel</model-class>\n  <name>test</name>\n</active-test-model>\n"
+      xml = @model.to_xml
+      xml.should =~ /^<\?xml version=.+1\.0.+ encoding=.+UTF-8.+\?>/
+      xml.should =~ /<model-class>ActiveTestModel<\/model-class>/
+      xml.should =~ /<-id>test_model_1<\/-id>/
+      xml.should =~ /<name>test<\/name>/
+      xml.should =~ /<email>test<\/email>/
     end
 
   end
