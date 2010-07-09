@@ -39,7 +39,7 @@ module CouchModel
           define_method :"#{reader_name}" do
             klass = Object.const_get class_name
             klass.find self.send(key)
-          end          
+          end
         end
 
         def define_belongs_to_writer(writer_name, class_name, key)

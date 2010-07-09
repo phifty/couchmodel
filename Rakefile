@@ -9,8 +9,8 @@ task :default => :spec
 
 specification = Gem::Specification.new do |specification|
   specification.name              = "couchmodel"
-  specification.version           = "0.1.2"
-  specification.date              = "2010-06-12"
+  specification.version           = "0.1.3"
+  specification.date              = "2010-07-09"
 
   specification.authors           = [ "Philipp Bruell" ]
   specification.email             = "b.phifty@gmail.com"

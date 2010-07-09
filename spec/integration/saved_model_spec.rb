@@ -50,12 +50,7 @@ describe "integration" do
   describe "all" do
 
     it "should include the saved user" do
-      begin
-        User.all.should include(@user_one)
-      rescue Object => error
-        puts error.backtrace
-        raise error
-      end
+      User.all.should include(@user_one)
       User.all.should include(@user_two)
     end
 
@@ -69,6 +64,16 @@ describe "integration" do
 
     it "should return the user count" do
       @rows.first.value.should >= 2
+    end
+
+  end
+
+  describe "birthday" do
+
+    it "should return a time" do
+      @user_one.birthday.should be_instance_of(Date)
+      user = User.find @user_one.id
+      user.birthday.should be_instance_of(Date)
     end
 
   end

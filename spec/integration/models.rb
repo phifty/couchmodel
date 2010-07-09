@@ -15,6 +15,7 @@ class User < CouchModel::Base
 
   key_accessor :username
   key_accessor :email, :default => "no email"
+  key_accessor :birthday, :type => :date
 
   has_many :memberships,
            :class_name  => "Membership",
@@ -27,15 +28,15 @@ class Membership < CouchModel::Base
 
   setup_database DATABASE
 
-  key_accessor :created_at
+  key_accessor :created_at, :type => :time
 
   belongs_to :user, :class_name => "User"
 
 end
 
 def create_users_and_memberships
-  @user_one = User.create :username => "user one"
-  @user_two = User.create :username => "user two"
-  @membership_one = Membership.create :created_at => "yesterday", :user => @user_one
-  @membership_two = Membership.create :created_at => "yesterday", :user => @user_two
+  @user_one = User.create :username => "user one", :birthday => Date.parse("2000-07-07")
+  @user_two = User.create :username => "user two", :birthday => Date.parse("2000-07-07")
+  @membership_one = Membership.create :created_at => Time.parse("2010-07-07"), :user => @user_one
+  @membership_two = Membership.create :created_at => Time.parse("2010-07-07"), :user => @user_two
 end

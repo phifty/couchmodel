@@ -31,8 +31,8 @@ describe "integration" do
     end
 
     it "should use the selector" do
-      @user_one.memberships("yesterday").should include(@membership_one)
-      @user_one.memberships("today").should_not include(@membership_one)
+      @user_one.memberships(Time.parse("2010-07-07").strftime("%Y-%m-%d %H:%M:%S %z")).should include(@membership_one)
+      @user_one.memberships(Time.parse("2010-07-08").strftime("%Y-%m-%d %H:%M:%S %z")).should_not include(@membership_one)
     end
 
   end
