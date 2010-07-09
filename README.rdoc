@@ -54,7 +54,7 @@ manually by calling <tt>CouchModel::Configuration.setup_databases</tt> and
 The method <tt>key_accessor</tt> defined access methods to the given keys of the CouchDB document. It's also possible
 to use <tt>key_reader</tt> and <tt>key_writer</tt> here. If the <tt>:default</tt> option is passed, the key will get
 a default value assigned during initialization of the class. The <tt>:type</tt> option specifies the type of the
-attribute. Currently the types :integer, :string, :date and :time are supported.
+attribute. Currently the types <tt>:integer</tt>, <tt>:string</tt>, <tt>:date</tt> and <tt>:time</tt> are supported.
 
 == Design documents
 
