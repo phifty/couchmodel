@@ -66,25 +66,27 @@ module CouchModel
 
         def define_date_reader(name)
           define_method :"#{name}" do
-            Date.parse @attributes[name.to_s]
+            value = @attributes[name.to_s]
+            value ? Date.parse(value) : nil
           end
         end
 
         def define_date_writer(name)
           define_method :"#{name}=" do |value|
-            @attributes[name.to_s] = value.to_s
+            @attributes[name.to_s] = value ? value.to_s : nil
           end
         end
 
         def define_time_reader(name)
           define_method :"#{name}" do
-            Time.parse @attributes[name.to_s]
+            value = @attributes[name.to_s]
+            value ? Time.parse(value) : nil
           end
         end
 
         def define_time_writer(name)
           define_method :"#{name}=" do |value|
-            @attributes[name.to_s] = value.strftime("%Y-%m-%d %H:%M:%S %z")
+            @attributes[name.to_s] = value ? value.strftime("%Y-%m-%d %H:%M:%S %z") : nil
           end
         end
 

@@ -74,6 +74,7 @@ describe "integration" do
       @user_one.birthday.should be_instance_of(Date)
       user = User.find @user_one.id
       user.birthday.should be_instance_of(Date)
+      @user_two.birthday.should be_nil
     end
 
   end

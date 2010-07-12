@@ -36,7 +36,7 @@ end
 
 def create_users_and_memberships
   @user_one = User.create :username => "user one", :birthday => Date.parse("2000-07-07")
-  @user_two = User.create :username => "user two", :birthday => Date.parse("2000-07-07")
+  @user_two = User.create :username => "user two", :birthday => nil
   @membership_one = Membership.create :created_at => Time.parse("2010-07-07"), :user => @user_one
   @membership_two = Membership.create :created_at => Time.parse("2010-07-07"), :user => @user_two
 end
