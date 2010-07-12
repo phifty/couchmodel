@@ -62,6 +62,15 @@ module CouchModel
       true
     end
 
+    def update_attribute(name, value)
+      update_attributes name => value
+    end
+
+    def update_attributes(attributes)
+      self.attributes = attributes
+      self.save
+    end
+
     private
 
     def discard_changes!
@@ -104,7 +113,7 @@ module CouchModel
         define_method :"#{key}=" do |value|
           send :"#{key}_will_change!"
           send :"#{key}_without_dirty=", value
-        end        
+        end
       end
 
     end

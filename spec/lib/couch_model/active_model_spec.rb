@@ -124,7 +124,7 @@ describe ActiveTestModel do
     end
 
   end
-  
+
   describe "save" do
 
     before :each do
@@ -201,6 +201,33 @@ describe ActiveTestModel do
 
   end
 
+  describe "update_attribute" do
+
+    it "should call update_attributes" do
+      @model.should_receive(:update_attributes).with(:name => "test")
+      @model.update_attribute :name, "test"
+    end
+
+  end
+
+  describe "update_attributes" do
+
+    before :each do
+      @attributes = { :name => "test" }
+    end
+
+    it "should set the attributes" do
+      @model.should_receive(:attributes=).with(@attributes)
+      @model.update_attributes @attributes
+    end
+
+    it "should save the model" do
+      @model.should_receive(:save)
+      @model.update_attributes @attributes
+    end
+
+  end
+
   describe "create!" do
 
     it "should create a model" do
@@ -227,7 +254,7 @@ describe ActiveTestModel do
       @model.should_receive(:destroy_callback)
       do_destroy
     end
-    
+
   end
 
   describe "to_json" do
@@ -252,7 +279,7 @@ describe ActiveTestModel do
       @model.name = "test"
       @model.email = "test"
     end
-    
+
     it "should return all attributes as xml" do
       xml = @model.to_xml
       xml.should =~ /^<\?xml version=.+1\.0.+ encoding=.+UTF-8.+\?>/
