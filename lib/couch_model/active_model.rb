@@ -78,6 +78,21 @@ module CouchModel
       @changed_attributes = { }
     end
 
+    def merge_multiparameter_attributes(attributes)
+      result = attributes.stringify_keys
+      self.class.key_definitions.each do |key, definition|
+        case definition[:type]
+          when :date
+            parameters = attributes.values_at(*(1..3).map{ |index| "#{key}(#{index}i)" }).map(&:to_i)
+            result[key] = Date.civil *parameters rescue nil unless result[key].is_a?(Date)
+          when :time
+            parameters = attributes.values_at(*(1..6).map{ |index| "#{key}(#{index}i)" }).map(&:to_i)
+            result[key] = Time.mktime *parameters rescue nil unless result[key].is_a?(Time)
+        end
+      end
+      result
+    end
+
     class << self
 
       alias key_accessor_without_dirty key_accessor

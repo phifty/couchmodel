@@ -7,6 +7,8 @@ class ActiveTestModel < CouchModel::Base
 
   key_accessor :name
   key_accessor :email
+  key_accessor :date, :type => :date
+  key_accessor :time, :type => :time
 
   validates_presence_of :name
 
@@ -123,6 +125,31 @@ describe ActiveTestModel do
       @model.to_param.should == @model.id
     end
 
+  end
+
+  describe "attributes=" do
+
+    it "should convert multiple date parameters into one date field" do
+      @model.attributes = {
+        "date(1i)" => "2010",
+        "date(2i)" => "3",
+        "date(3i)" => "15"
+      }
+      @model.date.should == Date.parse("2010/03/15")
+    end
+
+    it "should convert multiple time parameters into one time field" do
+      @model.attributes = {
+        "time(1i)" => "2010",
+        "time(2i)" => "3",
+        "time(3i)" => "15",
+        "time(4i)" => "10",
+        "time(5i)" => "11",
+        "time(6i)" => "12"
+      }
+      @model.time.should == Time.parse("2010/03/15 10:11:12")
+    end
+    
   end
 
   describe "save" do

@@ -81,7 +81,7 @@ describe AccessorTestModel do
     end
 
     it "should set a default value" do
-      AccessorTestModel.defaults["test_two"].should == "test default"
+      AccessorTestModel.key_definitions["test_two"].should == { :default => "test default" }
     end
 
     it "should raise an ArgumentError on unsupported type" do
@@ -103,11 +103,19 @@ describe AccessorTestModel do
     it "should define writers for date types" do
       @model.test_date = Date.parse("2010-07-07")
       @model.attributes["test_date"].should == "2010-07-07"
+
+      @model.test_date = "2010-07-07"
+      @model.attributes["test_date"].should == "2010-07-07"
+      @model.test_date.should == Date.parse("2010-07-07")
     end
 
     it "should define writers for time types" do
       @model.test_time = Time.parse("2010-07-07 10:10:10")
       @model.attributes["test_time"].should == "2010-07-07 10:10:10 +0200"
+
+      @model.test_time = "2010-07-07 10:10:10"
+      @model.attributes["test_time"].should == "2010-07-07 10:10:10"
+      @model.test_time.should == Time.parse("2010-07-07 10:10:10")
     end
 
     it "should raise an exception if the writer method is already defined" do

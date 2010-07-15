@@ -70,11 +70,24 @@ describe "integration" do
 
   describe "birthday" do
 
-    it "should return a time" do
-      @user_one.birthday.should be_instance_of(Date)
-      user = User.find @user_one.id
-      user.birthday.should be_instance_of(Date)
-      @user_two.birthday.should be_nil
+    it "should return the correct date" do
+      @user_one.reload
+      @user_one.birthday.should == Date.parse("2000/07/07")
+
+      @user_two.reload
+      @user_two.birthday.should == Date.parse("2010/02/20")
+    end
+
+  end
+
+  describe "lunch" do
+
+    it "should return the correct time" do
+      @user_one.reload
+      @user_one.lunch.should == Time.parse("2010/10/21 12:13:14")
+
+      @user_two.reload
+      @user_two.lunch.should == Time.parse("2010/10/21 12:13:14")
     end
 
   end

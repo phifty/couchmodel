@@ -15,20 +15,22 @@ module CouchModel
 
       module ClassMethods
 
+        attr_reader :key_definitions
+
         def key_reader(key, options = { })
           raise ArgumentError, "method #{key} is already defined" if method_defined?(:"#{key}")
-          default, type = options.values_at :default, :type
-          set_default key, default if default
-          send :"define_#{type || :string}_reader", key
+          set_key_definition key, options
+          type = options[:type] || :string
+          send :"define_#{type}_reader", key
         rescue NoMethodError
           raise ArgumentError, "type #{type} isn't supported"
         end
 
         def key_writer(key, options = { })
           raise ArgumentError, "method #{key}= is already defined" if method_defined?(:"#{key}=")
-          default, type = options.values_at :default, :type
-          set_default key, default if default
-          send :"define_#{type || :string}_writer", key
+          set_key_definition key, options
+          type = options[:type] || :string
+          send :"define_#{type}_writer", key
         rescue NoMethodError
           raise ArgumentError, "type #{type} isn't supported"
         end
@@ -39,6 +41,11 @@ module CouchModel
         end
 
         private
+
+        def set_key_definition(key, definition)
+          @key_definitions ||= { }
+          @key_definitions[key.to_s] = definition
+        end
 
         def define_integer_reader(name)
           define_method :"#{name}" do
@@ -86,7 +93,7 @@ module CouchModel
 
         def define_time_writer(name)
           define_method :"#{name}=" do |value|
-            @attributes[name.to_s] = value ? value.strftime("%Y-%m-%d %H:%M:%S %z") : nil
+            @attributes[name.to_s] = value.is_a?(Time) ? value.strftime("%Y-%m-%d %H:%M:%S %z") : value
           end
         end
 

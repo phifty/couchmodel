@@ -31,12 +31,13 @@ module CouchModel
       @attributes = { Configuration::CLASS_KEY => klass.to_s }
       self.attributes = attributes
 
-      klass.defaults.each do |key, value|
-        @attributes[key] = value unless @attributes.has_key?(key)
-      end      
+      klass.key_definitions.each do |key, definition|
+        @attributes[key] = definition[:default] if definition.has_key?(:default) && !@attributes.has_key?(key)
+      end
     end
 
     def attributes=(attributes)
+      attributes = merge_multiparameter_attributes attributes
       attributes.each { |key, value| self.send :"#{key}=", value if self.respond_to?(:"#{key}=") }
     end
 
@@ -96,7 +97,7 @@ module CouchModel
     private
 
     def rev=(value)
-      @attributes["_rev"] = value      
+      @attributes["_rev"] = value
     end
 
     def load_response(response)
@@ -129,15 +130,6 @@ module CouchModel
       raise NotFoundError if error.status_code == 404
       raise error
     end
-
-    def self.set_default(key, value)
-      @defaults ||= { }
-      @defaults[key.to_s] = value
-    end
-
-    def self.defaults
-      @defaults || { }
-    end    
 
     def self.create(*arguments)
       model = new *arguments
