@@ -6,7 +6,7 @@ CouchModel::Configuration.design_directory = File.join File.dirname(__FILE__), "
 describe CouchModel::Design do
 
   before :each do
-    @model_class = Object
+    @model_class = Object.new
     @model_class.stub!(:to_s).and_return("BaseTestModel")
     @database = CouchModel::Database.new :name => "test"
     @design = CouchModel::Design.new @database, @model_class, :language => "another_language"
@@ -50,7 +50,7 @@ describe CouchModel::Design do
         @design.language.should == "javascript"
         @design.views.should_not be_nil
       end
-      
+
       it "should return true" do
         do_load.should be_true
       end
@@ -114,7 +114,7 @@ describe CouchModel::Design do
         "views"     => { "test_view" => {"map" => "function(document) { };", "reduce" => "function(key, values, rereduce) { };" } }
       }
     end
-    
+
   end
 
   describe "exists?" do

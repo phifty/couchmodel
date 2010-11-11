@@ -1,9 +1,9 @@
 require 'rubygems'
 gem 'rspec'
-require 'spec'
+require 'rspec'
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 
 task :default => :spec
 
@@ -27,7 +27,7 @@ specification = Gem::Specification.new do |specification|
 
   specification.test_files        = Dir["spec/**/*_spec.rb"]
 
-  specification.add_development_dependency "rspec", ">= 1.3.0"
+  specification.add_development_dependency "rspec", ">= 2.0.1"
 end
 
 Rake::GemPackageTask.new(specification) do |package|
@@ -42,15 +42,15 @@ Rake::RDocTask.new do |rdoc|
 end
 
 desc "Run all specs in spec directory"
-Spec::Rake::SpecTask.new do |task|
-  task.spec_files = FileList["spec/lib/**/*_spec.rb"]
+RSpec::Core::RakeTask.new do |task|
+  task.pattern = "spec/lib/**/*_spec.rb"
 end
 
 namespace :spec do
 
   desc "Run all integration specs in spec/integration directory"
-  Spec::Rake::SpecTask.new(:integration) do |task|
-    task.spec_files = FileList["spec/integration/**/*_spec.rb"]
+  RSpec::Core::RakeTask.new(:integration) do |task|
+    task.pattern = "spec/integration/**/*_spec.rb"
   end
 
 end

@@ -149,7 +149,7 @@ describe ActiveTestModel do
       }
       @model.time.should == Time.parse("2010/03/15 10:11:12")
     end
-    
+
   end
 
   describe "save" do
@@ -311,7 +311,7 @@ describe ActiveTestModel do
       xml = @model.to_xml
       xml.should =~ /^<\?xml version=.+1\.0.+ encoding=.+UTF-8.+\?>/
       xml.should =~ /<model-class>ActiveTestModel<\/model-class>/
-      xml.should =~ /<-id>test_model_1<\/-id>/
+      xml.should =~ /<_id>test_model_1<\/_id>/
       xml.should =~ /<name>test<\/name>/
       xml.should =~ /<email>test<\/email>/
     end
