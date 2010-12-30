@@ -175,3 +175,6 @@ then be used to define the models.
 
 CouchModel is still under development and needs to be tested. Any contribution is welcome!
 
+== Support
+
+Apart from contribution, support via Flattr[http://flattr.com/thing/108995/CouchModel] is welcome.
