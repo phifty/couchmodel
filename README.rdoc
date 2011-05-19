@@ -1,4 +1,6 @@
 
+= This project is no longer under development. Visit https://github.com/phifty/gom
+
 = CouchModel
 
 The intent of CouchModel is, to provide an easy interface handle CouchDB documents. It also comes with a ActiveModel
@@ -170,10 +172,6 @@ then be used to define the models.
     ...
 
   end
-
-== Development
-
-CouchModel is still under development and needs to be tested. Any contribution is welcome!
 
 == Support
 
