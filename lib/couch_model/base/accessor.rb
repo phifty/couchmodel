@@ -18,7 +18,6 @@ module CouchModel
         attr_reader :key_definitions
 
         def key_reader(key, options = { })
-          raise ArgumentError, "method #{key} is already defined" if method_defined?(:"#{key}")
           set_key_definition key, options
           type = options[:type] || :string
           send :"define_#{type}_reader", key
@@ -27,7 +26,6 @@ module CouchModel
         end
 
         def key_writer(key, options = { })
-          raise ArgumentError, "method #{key}= is already defined" if method_defined?(:"#{key}=")
           set_key_definition key, options
           type = options[:type] || :string
           send :"define_#{type}_writer", key

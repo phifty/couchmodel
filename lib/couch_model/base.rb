@@ -24,7 +24,9 @@ module CouchModel
     # dosen't exists.
     class NotFoundError < StandardError; end
 
-    attr_reader :attributes
+    def attributes
+      @attributes || {}
+    end
 
     def initialize(attributes = { })
       klass = self.class
