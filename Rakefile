@@ -1,8 +1,8 @@
 require 'rubygems'
 gem 'rspec'
 require 'rspec'
-require 'rake/rdoctask'
-require 'rake/gempackagetask'
+require 'rdoc/task'
+require 'rubygems/package_task'
 require 'rspec/core/rake_task'
 
 task :default => :spec
@@ -30,7 +30,7 @@ specification = Gem::Specification.new do |specification|
   specification.add_development_dependency "rspec", ">= 2.0.1"
 end
 
-Rake::GemPackageTask.new(specification) do |package|
+Gem::PackageTask.new(specification) do |package|
   package.gem_spec = specification
 end
 
